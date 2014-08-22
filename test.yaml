@@ -1,0 +1,9 @@
+# wow such test file
+
+address: 1234 Nowhere Street
+city: Nowhereland
+customer:
+    name: Joseph
+    surname: Brown
+date: 2014-03-10
+details: "#some characters should be Quoted in YAML"

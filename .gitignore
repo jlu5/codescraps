@@ -1,0 +1,13 @@
+/artifacts
+__pycache__/
+*.py[cod]
+*.gem
+*.rbc
+/.config
+*.bak
+
+# Windows specific things
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
