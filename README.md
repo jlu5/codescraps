@@ -18,7 +18,7 @@ Enjoy!
 - Random password generator.
 
 ##### randomjunk.py
-- Literally generates a pile of random junk in your terminal. Can be coloured too (**~~amaze~~**)!
+- Literally generates a pile of random junk in your terminal. Can be coloured too (**&#126;&#126;amaze&#126;&#126;**)!
 
 ##### hilo.py
 - Plays a game of HiLo.
