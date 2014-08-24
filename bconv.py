@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python2
 ### Configuration ###
 
 import datetime, glob, argparse, os, sys, re

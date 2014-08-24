@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import random
 import argparse
 import sys

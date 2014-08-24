@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import random, string, sys
 from os.path import basename
 

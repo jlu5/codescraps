@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # Retrieved from http://freenode.net/irc_servers.shtml (11/03/2014)
 # This list is just an example, it should theoretically work for any list.
 hosts = [# Asia/Pacific Rim
@@ -46,13 +47,13 @@ for host in hosts:
             FNULL = open(os.devnull, 'w')
             data = subprocess.call(["ping", host, "-c 1 -w {}".format(timeout)], stdout=FNULL)
         except KeyboardInterrupt:
-            continue # Be patient!
+            sys.exit()
     elif sys.platform == "win32":
         try:
             FNULL = open(os.devnull, 'w')
             data = subprocess.call("ping -w {} -n 1 {}".format(timeout*1000, host), stdout=FNULL)
         except KeyboardInterrupt:
-            continue
+            sys.exit()
     else:
         print("Unknown system version: {}".format(sys.platform))
     if data == 0:

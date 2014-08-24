@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 def getslope(x1, y1, x2, y2):
     # Don't bother checking for ValueError, you shouldn't be putting things
     # that aren't numbers here anyways.

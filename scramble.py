@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 from random import shuffle
 
 def scramble(word):
@@ -6,6 +7,11 @@ def scramble(word):
     return ''.join(word)
     
 if __name__ == "__main__":
-    s = raw_input("Enter string to scramble: ")
-    print scramble(s)
-    raw_input()
+    import sys
+    try:
+        while True:
+            s = raw_input("Enter string to scramble: ")
+            print scramble(s)
+    except KeyboardInterrupt:
+         print ""
+         sys.exit()

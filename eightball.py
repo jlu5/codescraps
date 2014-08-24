@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import random
 # Responses taken from http://en.wikipedia.org/wiki/Magic_8_ball#Possible_answers
 responses = ['It is certain.', 'It is decidedly so.', 'Without a doubt.',

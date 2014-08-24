@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import sys, random, string
 from time import sleep
 

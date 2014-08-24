@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 puts 'Enter amount of seconds:'
 t = gets.chomp.to_i
 #t = 454544

@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # Licensed under cc by-sa 3.0, Adapted from http://stackoverflow.com/a/19193721
 def numToWords(num):
     """words = {} convert an integer number into words"""

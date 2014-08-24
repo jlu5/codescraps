@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import random, time, sys
 
 tries = fails = 0
