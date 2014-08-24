@@ -4,11 +4,13 @@ from time import sleep
 
 class RJError(Exception):
     pass
-def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False):
+def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False,
+    no_digits=False, no_symbols=False):
     """Generates random junk."""
     b = 0
-    s = string.ascii_letters + string.punctuation + string.digits +\
-        (" \n" if not no_whitespace else '')
+    s = string.ascii_letters + (" \n" if not no_whitespace else '')
+    if not no_symbols: s += string.punctuation
+    if not no_digits: s += string.digits
     if colored:
         try: 
             from colorama import init, Fore
@@ -39,12 +41,16 @@ if __name__ == "__main__":
         "random junk to files", action='store_true')
     parser.add_argument("-nw", "--no-whitespace", help="Disables generating "
         "whitespace", action='store_true')
+    parser.add_argument("-ns", "--no-symbols", help="Disables generating "
+        "random symbols", action='store_true')
+    parser.add_argument("-nn", "--no-digits", help="Disables generating "
+        "random digits", action='store_true')
     parser.add_argument("bytes", help="Sets the amount of random junk (in "
         "bytes) this script will dump, excluding newlines and colors",
         type=int)
     args = parser.parse_args()
     try: randomjunk(args.bytes, args.color, args.no_delay, 
-        args.no_whitespace)
+        args.no_whitespace, args.no_digits, args.no_symbols)
     except KeyboardInterrupt: sys.exit()
     except RJError as e: sys.stderr.write(str(e))
     else: sys.stderr.write("\n\nDone!\n")
