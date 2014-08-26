@@ -4,11 +4,17 @@ from time import sleep
 
 class RJError(Exception):
     pass
+<<<<<<< HEAD
 def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False, irccolor=False):
+=======
+def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False,
+    no_digits=False, no_symbols=False):
+>>>>>>> 5ee5b9a98be5fb44d182fca3732740a6b7f08c7a
     """Generates random junk."""
     b = 0
-    s = string.ascii_letters + string.punctuation + string.digits +\
-        (" \n" if not no_whitespace else '')
+    s = string.ascii_letters + (" \n" if not no_whitespace else '')
+    if not no_symbols: s += string.punctuation
+    if not no_digits: s += string.digits
     if colored:
         try: 
             from colorama import init, Fore
@@ -41,6 +47,10 @@ if __name__ == "__main__":
         "random junk to files", action='store_true')
     parser.add_argument("-nw", "--no-whitespace", help="Disables generating "
         "whitespace", action='store_true')
+    parser.add_argument("-ns", "--no-symbols", help="Disables generating "
+        "random symbols", action='store_true')
+    parser.add_argument("-nn", "--no-digits", help="Disables generating "
+        "random digits", action='store_true')
     parser.add_argument("bytes", help="Sets the amount of random junk (in "
         "bytes) this script will dump, excluding newlines and colors",
         type=int)
@@ -48,7 +58,14 @@ if __name__ == "__main__":
         " (this overrides the --color option", action='store_true')
     args = parser.parse_args()
     try: randomjunk(args.bytes, args.color, args.no_delay, 
+<<<<<<< HEAD
         args.no_whitespace, args.irc)
     except KeyboardInterrupt: sys.exit()
     except RJError as e: sys.stderr.write(str(e))
     # else: sys.stderr.write("\n")
+=======
+        args.no_whitespace, args.no_digits, args.no_symbols)
+    except KeyboardInterrupt: sys.exit()
+    except RJError as e: sys.stderr.write(str(e))
+    else: sys.stderr.write("\n\nDone!\n")
+>>>>>>> 5ee5b9a98be5fb44d182fca3732740a6b7f08c7a
