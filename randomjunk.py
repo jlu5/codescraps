@@ -4,7 +4,7 @@ from time import sleep
 
 class RJError(Exception):
     pass
-def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False):
+def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False, irccolor=False):
     """Generates random junk."""
     b = 0
     s = string.ascii_letters + string.punctuation + string.digits +\
@@ -23,7 +23,9 @@ def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False):
         sys.stdout.write(random.choice(s))
         if not no_delay: sleep(random.uniform(0.0005, 0.01))
         b += 1
-        if colored and random.random() >= 0.8:
+        if irccolor and random.random() >= 0.75:
+            sys.stdout.write(random.choice(['\x03'+str(x).zfill(2) for x in(range(16))]))
+        elif colored and random.random() >= 0.8:
             sys.stdout.write(random.choice(([getattr(Fore, x) for x in 
             ('BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN',
             'WHITE', 'RESET')])))
@@ -42,9 +44,11 @@ if __name__ == "__main__":
     parser.add_argument("bytes", help="Sets the amount of random junk (in "
         "bytes) this script will dump, excluding newlines and colors",
         type=int)
+    parser.add_argument("-i", "--irc", help="Use IRC color codes in output"
+        " (this overrides the --color option", action='store_true')
     args = parser.parse_args()
     try: randomjunk(args.bytes, args.color, args.no_delay, 
-        args.no_whitespace)
+        args.no_whitespace, args.irc)
     except KeyboardInterrupt: sys.exit()
     except RJError as e: sys.stderr.write(str(e))
-    else: sys.stderr.write("\n\nDone!\n")
+    # else: sys.stderr.write("\n")
