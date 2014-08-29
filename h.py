@@ -89,7 +89,7 @@ def _connect(url=args.url):
         sys.exit(1)
     print(r1.status, r1.reason+":", url)
     if r1.status == 200 and not args.disable_meta_refresh:
-        metaparse.feed(r1.read().decode())
+        metaparse.feed(r1.read().decode("utf-8", "replace"))
     else: L = r1.getheader('location') 
     if args.verbose:
         headers = r1.getheaders()
