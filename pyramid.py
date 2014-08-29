@@ -1,3 +1,4 @@
+#/usr/bin/env python
 import sys
 s = ' '.join(sys.argv[1:])
 if s:
