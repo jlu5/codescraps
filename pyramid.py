@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 s = ' '.join(sys.argv[1:])
 if s:
@@ -12,4 +13,4 @@ if s:
             print(s[:n])
             n -= 1
             l += 1
-        else: print("Total of {} lines printed.".format(l))
+        # else: print("Total of {} lines printed.".format(l))
