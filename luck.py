@@ -27,7 +27,7 @@ while True:
         print 'Max. amount of tries ({}) reached, terminating...'.format(tries)
         break
     if r != n:
-        print 'Random number is not {}, trying again in {} seconds... (found {})'.format(n, t, r)
+        print 'Random number is not {}, trying again... (found {})'.format(n, r)
         tries = tries + 1
     else: 
         if tries <= 10:

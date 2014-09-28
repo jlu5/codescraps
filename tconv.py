@@ -1,14 +1,15 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import sys
 
 try:
-    s = int(raw_input("Enter an amount of seconds: "))
-except ValueError:
-    print "try again"
-    sys.exit(1)
-else:
-    if s < 1:
-        print "try again"
+    s = int(sys.argv[1])
+except:
+    try:
+        if sys.version_info[0] < 3:
+            s = int(raw_input("Enter an amount of seconds: "))
+        else: s = int(input("Enter an amount of seconds: "))
+    except ValueError:
+        print("try again")
         sys.exit(1)
     
 # divmod gives a pair of numbers: the quotient and remainder.
@@ -21,4 +22,4 @@ d, h = divmod(h, 24)
 w, d = divmod(d, 7)
 
 elapsed = "Elapsed time: {}w {}d {}h {}m {}s".format(w, d, h, m, s)
-print elapsed
+print(elapsed)

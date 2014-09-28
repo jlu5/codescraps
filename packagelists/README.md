@@ -13,3 +13,6 @@ Most of these scripts use stdout for their output, meaning it can be automated/c
 ##### rplist.sh
  * Automates the above process using bash for loops.
  
+##### aptlysc.py
+ * Script automating some slightly more complicated functions such as finding duplicate packages in repos. Still very much a WIP.
+ 

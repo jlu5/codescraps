@@ -1,7 +1,9 @@
 #!/usr/bin/env python2
 # Licensed under cc by-sa 3.0, Adapted from http://stackoverflow.com/a/19193721
 def numToWords(num):
-    """words = {} convert an integer number into words"""
+    """<num>
+    
+    Converts an integer or float into words."""
     units = ('zero','one','two','three','four','five','six','seven','eight',
         'nine')
     teens = ('','eleven','twelve','thirteen','fourteen','fifteen','sixteen',
@@ -56,12 +58,13 @@ def numToWords(num):
     if s.endswith(","): s = s[:-1]
     return s
 
-
 if __name__ == "__main__":
     from sys import argv
-    try: print numToWords(float(argv[1]))
+    try: 
+        n = float(argv[1])
+        print(numToWords(int(n) if n.is_integer() else n))
     except (ValueError, IndexError):
-        print "example usages:"
+        print("example usages:")
         for x in (0, 11, 109, 100100002536, -6, 
             1234567890.12, 1020304050607, -8.02, 0.54321909): 
-            print x,numToWords(x)
+            print("%s -> %s" % (x,numToWords(x)))

@@ -1,48 +1,33 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import random, string, sys
 from os.path import basename
 
-def _gettype(input):
-    if input == "all": return string.ascii_letters + string.digits
-    elif input == "letters": return string.ascii_letters
-    elif input == "numbers": return string.digits
-    elif input == "upper": return string.ascii_uppercase
-    elif input == "lower": return string.ascii_lowercase
-    else: 
-        if __name__ == "__main__":
-            _usage()
-        else:
-            raise ValueError("Unknown string type: " + input)
-
-def gen(length=10, amount=5, type="all", chanify=False):
-    type = _gettype(type)
-    if length not in range(1, 101) or amount not in range(1, 101):
+def gen(length=10, amount=5, type="all"):
+    """Generates a list of random (IRC-style) channels."""
+    type = string.ascii_letters + string.digits
+    if length < 1 or amount < 1:
         if __name__ == "__main__":
             _usage()
         else:
             raise ValueError("Value for length or amount too not in range (1-100)")
-    L = []
-    for n in range(amount):
-        L.append("".join(random.choice(type) for blah in range(length)))
-    if chanify:
-        return ",".join(["#" + item for item in L])
+    L = ",".join("#"+("".join((random.choice(type)) for _ in xrange(length))) for _ in xrange(amount))
     return L
     
 def _usage():
-    print "Usage: {} <length> <amount>\n\narguments: \n  length        The length of each channel name to be generated. \n  amount        The amount of names to generate.".format(basename(__file__))
+    print("Usage: {} <length> <amount>\n\narguments: \n  length        The length of each channel name to be generated. \n  amount        The amount of names to generate.".format(basename(__file__)))
     sys.exit()
     
 def _main():
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 5:
         _usage()
     try:
         length, amount = int(sys.argv[1]), int(sys.argv[2])
     except IndexError:
-        print gen(chanify=True)
+        print(gen())
     except ValueError:
         _usage()
     else:
-        print gen(length, amount, chanify=True)
+        print(gen(length, amount))
     
 if __name__ == "__main__":
     _main()

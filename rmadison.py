@@ -32,11 +32,8 @@ if __name__ == "__main__":
     try:
         d = madison(sys.argv[1], 'all')
     except IndexError:
-        print("Need package name as argument!")
+        print("Need package name as argument! Usage: rmadison.py <packagename>")
     else:
         print("Found {} results:".format(len(d)))
-        # print (', '.join("{!s} " \
-        # "({!s} [{!s}])".format(k,v[0],v[1]) for (k,v) in \
-        # d.items())
         for (k, v) in d.items():
             print("{} ({} [{}])".format(k,v[0],v[1]))

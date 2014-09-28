@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-import sys
-s = ' '.join(sys.argv[1:])
-if s:
-    n = 1
-    l = 0
+def pyramid(s):
+    """Creates pyramid text from input."""
+    n, l = 1, 0
     while n < len(s) and l < 5000:
         print(s[:n])
         n += 1
@@ -13,4 +11,8 @@ if s:
             print(s[:n])
             n -= 1
             l += 1
-        # else: print("Total of {} lines printed.".format(l))
+        
+if __name__ == "__main__":
+    import sys
+    s = ' '.join(sys.argv[1:])
+    if s: pyramid(s)
