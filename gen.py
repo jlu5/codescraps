@@ -18,7 +18,7 @@ def _usage():
     sys.exit()
     
 def _main():
-    if len(sys.argv) > 5:
+    if len(sys.argv) > 3:
         _usage()
     try:
         length, amount = int(sys.argv[1]), int(sys.argv[2])
