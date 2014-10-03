@@ -56,16 +56,15 @@ if __name__ == '__main__':
                 co = raw_input("Enter two pairs of coordinates in the form: x1, x2,"
                     " y1, y2: ")
             if re.findall(signs, co):
-                print("Invalid input. Please do not enter any letters "
-                    "or mathematical symbols.")
+                print("Invalid input.")
                 continue
             for n in re.findall(numfind, co):
                 if "/" in n:
                     nums.append(eval("1.0*" + n))
                 else:
                     nums.append(n)
-            if len(nums) == 4:
-                x1, y1, x2, y2 = nums
+            if len(nums) >= 4:
+                x1, y1, x2, y2 = nums[:4]
                 if x1 == x2 and y1 == y2:
                     # Sanity check!
                     print("\nThose two points are the same!")
