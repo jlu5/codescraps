@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import sys, urllib2
 from HTMLParser import HTMLParser
 

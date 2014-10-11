@@ -1,3 +1,4 @@
+#!/usr/bin/env lua
 math.randomseed(os.time())
 math.random(); math.random(); math.random()
 

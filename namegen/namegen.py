@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import sys, random
 with open('starts.txt') as f:
     starts = f.read().splitlines()

@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # This app is basically a proof of concept of divisibility rules.
 # http://en.wikipedia.org/wiki/Divisibility_rule
 # All the below functions take integers only!

@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # Rewrite of my earlier segfault_msgbox.vbs in a language that isn't so 
 # frustratingly difficult to use ;)
 import Tkinter

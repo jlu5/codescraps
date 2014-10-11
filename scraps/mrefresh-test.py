@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 from HTMLParser import HTMLParser
 
 class metarefreshParser(HTMLParser):

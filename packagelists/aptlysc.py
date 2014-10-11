@@ -42,10 +42,10 @@ if command == 'getdup':
         sys.exit(2)
     getdups(params[0])
 elif command == 'snapshot':
-    for repo in repos:
+    for mir in mirrors:
         if (params and re.search(params[0], repo)) or not params:
-            sys.stdout.write(subprocess.check_output('aptly snapshot create {r}-{d} from repo {r}'.format(
-                r=repo,d=time.strftime('%Y-%m-%d')), shell=True))
+            sys.stdout.write(subprocess.check_output('aptly snapshot create {r}-{d} from mirror {r}'.format(
+                r=mir,d=time.strftime('%Y-%m-%d')), shell=True))
 elif command == 'refreshmirrors':
     for m in mirrors:
         sys.stdout.write(subprocess.check_output('aptly mirror update %s' % m, shell=True))

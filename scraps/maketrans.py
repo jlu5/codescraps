@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # www.pythonchallenge.com/pc/def/map.html
 
 import string

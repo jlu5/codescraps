@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 try:
     from urllib.request import urlopen
     from urllib.parse import urlencode

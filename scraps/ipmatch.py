@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import re
 import socket
 
@@ -10,9 +11,7 @@ v6cloaku = re.match("([0-9A-F]{8}:){3}IP", string)
 v6cloakc = re.match("([0-9a-z]{1,4}:{1,2}){2,8}", string)
 try:
     v6ip = socket.inet_pton(socket.AF_INET6, string)
-except socket.error:
-    pass
-except AttributeError:
+except (socket.error, AttributeError):
     # inet_pton not implemented on platform, use regexp instead
     v6ip = re.match("([0-9a-f]{1,4}:{1,2}){2,8}", string)
 try:
@@ -32,5 +31,3 @@ elif v6cloakc:
     print 'matches charybdis-style IPv6 cloak.'
 else:
     print 'Does not match!'
-print ''
-raw_input("Press Enter to continue...")

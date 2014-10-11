@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 import fileinput, time
 archs = ("amd64", "i386")
 

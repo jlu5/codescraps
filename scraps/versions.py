@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 from distutils.version import LooseVersion as lv
 
 def compare(ver1, ver2):

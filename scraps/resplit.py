@@ -1,5 +1,4 @@
-# Here is a test of python's re.split function. ~GLolol
-
+#!/usr/bin/env python2
 import re
 
 # This fake IP is actually a reserved test range (http://en.wikipedia.org/wiki/Reserved_IP_addresses)

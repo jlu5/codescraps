@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import time, glob, argparse
 # A test of argumentparser, glob filenames, and strftime...
 parser = argparse.ArgumentParser()

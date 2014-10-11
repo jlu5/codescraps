@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # Some IP/CIDR calculator thing I'm trying to make. This is probably broken in more places then you can possibly count!
 
 import random
