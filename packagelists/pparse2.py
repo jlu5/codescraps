@@ -6,7 +6,10 @@ packagelist = []
 unique = set()
 for line in fileinput.input():
     if line.startswith(" "):
+        # s is a string in the format packagename_version_arch
         s = line.strip().split("_")
+        # Expand architecture "all" packages to every arch specified
+        # in archs
         if s[2] == "all":
             for a in archs:
                 packagelist.append({'pkg': s[0], 'ver': s[1], 
