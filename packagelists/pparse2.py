@@ -10,6 +10,8 @@ for line in fileinput.input():
         s = line.strip().split("_")
         # Expand architecture "all" packages to every arch specified
         # in archs
+        if s[2] == "source":
+             unique.add(s[0])
         if s[2] == "all":
             for a in archs:
                 packagelist.append({'pkg': s[0], 'ver': s[1], 
@@ -17,7 +19,6 @@ for line in fileinput.input():
         else:
             packagelist.append({'pkg': s[0], 'ver': s[1], 
                             'arch': s[2]})
-        unique.add(s[0])
 # Sort everything by package name
 packagelist.sort(key=lambda k: k['pkg'])
 
@@ -38,6 +39,6 @@ for p in packagelist:
     print("""<tr><td>{}</td><td>{}</td><td>{}</td></tr>"""
         .format(p.get('pkg'), p.get('ver'), p.get('arch')))
 print """</table>
-<p><b>Total items:</b> {} ({} unique package names)</p>
+<p><b>Total items:</b> {} ({} unique source packages)</p>
 <p>Last updated {}</p>
 </body></html>""".format(len(packagelist), len(unique), time.strftime("%I:%M:%S %p, %b %d %Y +0000", time.gmtime()))
