@@ -11,6 +11,9 @@ Enjoy!
 ##### h.py
 - Recursive HTTP/meta-refresh redirect expander.
 
+##### hilo.py
+- Plays a game of HiLo.
+
 ##### n2w.py
 - Expands numbers in full (or at least attempts to).
 
@@ -20,11 +23,11 @@ Enjoy!
 ##### randomjunk.py
 - Literally generates a pile of random junk in your terminal. Can be coloured too (**&#126;&#126;amaze&#126;&#126;**)!
 
-##### hilo.py
-- Plays a game of HiLo.
-
 ##### slope.py
-- Simple slope calculator.
+- Simple slope-intercept calculator.
+
+##### slopetk.py
+- GUI version of **slope.py**, written in Tkinter.
 
 ##### luck.py
 - A game of luck.

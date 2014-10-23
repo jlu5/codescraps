@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 import random
 import argparse
 import sys
@@ -20,6 +20,8 @@ elif max - min < 10:
 t, n = 1, random.randint(min, max)
 print("Let's play HiLo!\n")
 
+if sys.version_info[0] > 2:
+    raw_input = input
 while True:
     try:
         try:
@@ -32,10 +34,10 @@ while True:
             print("Value not in range!")
             t = t + 1
         elif g > n:
-            print "Lower!"
+            print("Lower!")
             t = t + 1
         elif g < n:
-            print "Higher!"
+            print("Higher!")
             t = t + 1
         else:
             print('\nYou win! The correct number was {}, and it took you {} tries to'

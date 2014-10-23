@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # Licensed under cc by-sa 3.0, Adapted from http://stackoverflow.com/a/19193721
 def numToWords(num):
     """<num>
@@ -23,12 +23,12 @@ def numToWords(num):
         return "negative "+numToWords(abs(num))
     else:
         numStr = str(num).split(".")[0]
-        groups = (len(numStr)+2)/3
+        groups = int((len(numStr)+2)/3)
         if numStr.startswith("0"): words.append("zero")
         numStr = numStr.zfill(groups*3)
-        for i in xrange(0, groups*3, 3):
-            h, t, u = int(numStr[i]), int(numStr[i+1]), int(numStr[i+2])
-            g = groups-(i/3+1)
+        for i in range(0, groups*3, 3):
+            h, t, u = map(int, (numStr[i], numStr[i+1], numStr[i+2]))
+            g = int(groups-(i/3+1))
             if h >= 1:
                 words.append(units[h])
                 words.append('hundred')
@@ -60,6 +60,7 @@ def numToWords(num):
 
 if __name__ == "__main__":
     from sys import argv
+    from os.path import basename
     try: 
         n = float(argv[1])
         print(numToWords(int(n) if n.is_integer() else n))
@@ -67,4 +68,4 @@ if __name__ == "__main__":
         print("example usages:")
         for x in (0, 11, 109, 100100002536, -6, 
             1234567890.12, 1020304050607, -8.02, 0.54321909): 
-            print("%s -> %s" % (x,numToWords(x)))
+            print("%s %s -> %s" % (basename(__file__), x, numToWords(x)))
