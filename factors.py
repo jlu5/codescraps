@@ -10,7 +10,7 @@ def factors(n):
         xrange = range
     n = int(n)
     if n <= 0:
-        raise ValueError("cannot find factors of neon-positive integers")
+        raise ValueError("cannot find factors of non-positive integers")
     if n >= 1000000000:
         raise ValueError("number too big to calculate")
     _factors = set()
