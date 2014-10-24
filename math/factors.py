@@ -7,14 +7,16 @@ def factors(n):
     
     Returns all factors of <number>."""
     if version_info[0] >= 3:
-        xrange = range
+        xr = range
+    else:
+        xr = xrange
     n = int(n)
     if n <= 0:
         raise ValueError("cannot find factors of non-positive integers")
     if n >= 1000000000:
         raise ValueError("number too big to calculate")
     _factors = set()
-    for i in xrange(int(sqrt(n))):
+    for i in xr(int(sqrt(n))):
         i += 1
         if n % i == 0:
             _factors.add(i)
