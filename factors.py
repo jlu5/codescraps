@@ -6,7 +6,7 @@ def factors(n):
     """<number>
     
     Returns all factors of <number>."""
-    if version_info >= 3:
+    if version_info[0] >= 3:
         xrange = range
     n = int(n)
     if n <= 0:
@@ -18,7 +18,7 @@ def factors(n):
         i += 1
         if n % i == 0:
             _factors.add(i)
-            _factors.add(n/i)
+            _factors.add(int(n/i))
     return sorted(_factors)
     
 if __name__ == '__main__':
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     try:
         num = int(argv[1])
     except (IndexError, ValueError):
-        if version_info >= 3:
+        if version_info[0] >= 3:
             raw_input = input
         num = raw_input("Enter a number to factor: ")
     try:
