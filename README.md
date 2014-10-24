@@ -8,35 +8,25 @@ Enjoy!
 
 ## Highlights
 
-##### h.py
-- Recursive HTTP/meta-refresh redirect expander.
+##### math/factors.py
+- Lists factors for numbers.
 
-##### hilo.py
-- Plays a game of HiLo.
-
-##### n2w.py
+##### math/n2w.py
 - Expands numbers in full (or at least attempts to).
 
-##### passwd.py
-- Random password generator.
-
-##### randomjunk.py
-- Literally generates a pile of random junk in your terminal. Can be coloured too (**&#126;&#126;amaze&#126;&#126;**)!
-
-##### slope.py
+##### math/slope.py
 - Simple slope-intercept calculator.
 
-##### slopetk.py
+##### math/slopetk.py
 - GUI version of **slope.py**, written in Tkinter.
 
-##### luck.py
+##### random/hilo.py
+- Plays a game of HiLo.
+
+##### random/luck.py
 - A game of luck.
 
-##### rmadison.py
-- A script to fetch package information for the Debian and Ubuntu repositories. Essentially a reimplementation of the 'rmadison' utility available in Debian's devscripts.
-- The majority of this scripts' functions have been merged into [GLolol/SupyPlugins/PkgInfo](https://github.com/GLolol/SupyPlugins/blob/796a165e174c52d7de4d5fc251d8ababb2fba77f/PkgInfo/plugin.py)
-
-##### pyramid.py
+##### random/pyramid.py
 - Creates pyramid text. Why not, right?
 ```
 h
@@ -51,3 +41,15 @@ hel
 he
 h
 ```
+##### random/randomjunk.py
+- Literally generates a pile of random junk in your terminal. Can be coloured too (**&#126;&#126;amaze&#126;&#126;**)!
+
+##### utils/h.py
+- Recursive HTTP/meta-refresh redirect expander.
+
+##### utils/passwd.py
+- Random password generator.
+
+##### utils/vlist.py
+- A script to fetch package information from Debian, Arch Linux, and Ubuntu repositories. Essentially a reimplementation of the 'rmadison' utility available in Debian's devscripts.
+- The majority of this scripts' functions have been merged into [GLolol/SupyPlugins/PkgInfo](https://github.com/GLolol/SupyPlugins/blob/796a165e174c52d7de4d5fc251d8ababb2fba77f/PkgInfo/plugin.py)
