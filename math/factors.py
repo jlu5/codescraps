@@ -13,15 +13,14 @@ def factors(n):
     n = int(n)
     if n <= 0:
         raise ValueError("cannot find factors of non-positive integers")
-    if n >= 1000000000:
+    if n > 1000000000000000:
         raise ValueError("number too big to calculate")
-    _factors = set()
+    _factors = []
     for i in xr(int(sqrt(n))):
         i += 1
         if n % i == 0:
-            _factors.add(i)
-            _factors.add(int(n/i))
-    return sorted(_factors)
+            _factors.extend((i, int(n/i)))
+    return sorted(set(_factors))
     
 if __name__ == '__main__':
     from sys import argv
