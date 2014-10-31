@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 try:
     from Tkinter import *
+    from ttk import *
 except ImportError:
     from tkinter import *
+    from tkinter.ttk import *
 from slope import *
 
 if __name__ == "__main__":
     root = Tk()
-    root.title("Simple Slope Calculator")
+    root.title("SlopeCalc!")
 
     main = Frame(root)
     main.grid(column=0, row=0, sticky=(N, W, E, S))
+    for x in range(5):
+        main.columnconfigure(x, pad=5,weight=1)
+        main.rowconfigure(x, pad=5,weight=1)
+    main.pack(fill=BOTH, expand=YES)
 
     # Oh god, there's got to be a better way to initialize this...
     x1, y1, x2, y2, out, extra = StringVar(), StringVar(), StringVar(), \
@@ -34,25 +40,25 @@ if __name__ == "__main__":
 
     # And this too...
     x1_entry = Entry(main, width=7, textvariable=x1)
-    Label(main, text="x1").grid(column=2, row=1)
-    x1_entry.grid(column=2, row=2)
+    Label(main, text="x1").grid(column=0, row=0)
+    x1_entry.grid(column=0, row=1)
 
     y1_entry = Entry(main, width=7, textvariable=y1)
-    Label(main, text="y1").grid(column=3, row=1)
-    y1_entry.grid(column=3, row=2)
+    Label(main, text="y1").grid(column=1, row=0)
+    y1_entry.grid(column=1, row=1)
 
     x2_entry = Entry(main, width=7, textvariable=x2)
-    Label(main, text="x2").grid(column=4, row=1)
-    x2_entry.grid(column=4, row=2)
+    Label(main, text="x2").grid(column=2, row=0)
+    x2_entry.grid(column=2, row=1)
 
     y2_entry = Entry(main, width=7, textvariable=y2)
-    Label(main, text="y2").grid(column=5, row=1)
-    y2_entry.grid(column=5, row=2)
+    Label(main, text="y2").grid(column=3, row=0)
+    y2_entry.grid(column=3, row=1)
 
-    Label(main, textvariable=out).grid(column=2, row=3, columnspan=2)
-    Button(main, text="Calculate", command=_slopeWrapper).grid(column=4,
-        row=3, columnspan=2, rowspan=2)
-    Label(main, textvariable=extra).grid(column=2, row=4, columnspan=2)
+    Label(main, textvariable=out).grid(column=0, row=2, columnspan=4)
+    Button(main, text="Calculate", command=_slopeWrapper).grid(column=2,
+        row=3, columnspan=2)
+    Label(main, textvariable=extra).grid(column=0, row=3, columnspan=2)
 
     # Pad the app so it doesn't look all squished
     for child in main.winfo_children():
