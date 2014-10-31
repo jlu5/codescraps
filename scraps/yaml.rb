@@ -3,9 +3,7 @@ require 'yaml'
 # wow my first ruby test file: 2014-03-10
 
 options = {}
-#options[:config] = "config/config.yaml"
-#options[:config] = "test.yaml"
-options[:config] = "../test.yaml"
+options[:config] = "test.yaml"
   
 opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: opttest.rb [options]"

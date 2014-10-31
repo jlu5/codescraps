@@ -10,7 +10,7 @@ else:
     init()
 
 Config = ConfigParser.ConfigParser()
-Config.read("aconfigtest.conf")
+Config.read("configtest.conf")
 print "Archs: %s" % ' '.join(json.loads(Config.get('Config', "archs")))
 print "Package lists output directory: %s" % Config.get('Config', "pparse-outdir")
 repos = json.loads(Config.get('Config', "mirror-imports"))

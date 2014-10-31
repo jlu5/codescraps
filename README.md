@@ -11,6 +11,9 @@ Enjoy!
 ##### math/factors.py
 - Lists factors for numbers.
 
+##### math/factorstk.py
+- GUI version of **factors.py**.
+
 ##### math/n2w.py
 - Expands numbers in full (or at least attempts to).
 

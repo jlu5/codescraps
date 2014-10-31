@@ -1,10 +1,10 @@
 #!/usr/bin/env python2
 import sys, random
-with open('starts.txt') as f:
+with open('namegen-starts.txt') as f:
     starts = f.read().splitlines()
-with open('middles.txt') as f:
+with open('namegen-middles.txt') as f:
     middles = f.read().splitlines()
-with open('ends.txt') as f:
+with open('namegen-ends.txt') as f:
     ends = f.read().splitlines()
 
 def namegen():

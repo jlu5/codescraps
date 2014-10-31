@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 import time, glob, argparse
-# A test of argumentparser, glob filenames, and strftime...
 parser = argparse.ArgumentParser()
 parser.add_argument("globname", help="a filename glob to search for")
 parser.add_argument("--limit", "-l", default=50, type=int, 
     help="the max. number of results to output (defaults to 50)")
 args = parser.parse_args()
 
-#date = time.strftime('%Y%m', time.localtime())
-#globname = 'alpha_#overdrive_%s??.log' % str
-#globname = '*.log'
 globname = args.globname
 n = 0
 limit = args.limit
