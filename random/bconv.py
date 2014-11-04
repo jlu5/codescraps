@@ -1,7 +1,9 @@
 #!/usr/bin/env python2
 ### Configuration ###
 
-import datetime, glob, argparse, os, sys, re
+import datetime
+import os
+import re
 
 yesterday = datetime.datetime.now() - datetime.timedelta(days = 1)
 #filelist = glob.glob('/home/gl/pisglog/ovd_#chat_*.log')

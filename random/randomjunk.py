@@ -20,7 +20,6 @@ def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False,
             "http://pypi.python.org/pypi/colorama\n")
         else:
             init()
-            color = True
     while b < bytes:
         sys.stdout.write(random.choice(s))
         if not no_delay: sleep(random.uniform(0.0005, 0.01))

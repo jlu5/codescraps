@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import time, glob, argparse
+import argparse
+import glob
 parser = argparse.ArgumentParser()
 parser.add_argument("globname", help="a filename glob to search for")
 parser.add_argument("--limit", "-l", default=50, type=int, 
