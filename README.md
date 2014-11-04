@@ -29,6 +29,17 @@ Enjoy!
 ##### random/luck.py
 - A game of luck.
 
+##### random/namegen.py
+- Random name generator.
+```bash
+$ python namegen.py 5
+Ocynmel
+Barimeseneiel
+Corantastar
+Houlreth
+Estasty
+```
+
 ##### random/pyramid.py
 - Creates pyramid text. Why not, right?
 ```
