@@ -17,4 +17,4 @@ def parseEntry(entry):
 with open('spamtrap.csv', 'rb') as csvfile:
     spamdb = csv.reader(csvfile, delimiter=',')
     for entry in spamdb:
-        print parseEntry(entry)
+        print parseEntry(entry), entry

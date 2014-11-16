@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+; Permanently enable "Open Command Window Here" option in context menus
+; src: http://www.askvg.com/enable-open-command-window-here-option-in-context-menu-in-windows-vista/
+[HKEY_CLASSES_ROOT\Directory\shell\cmd]
+"Extended"=-
+
+[HKEY_CLASSES_ROOT\Drive\shell\cmd]
+"Extended"=-
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\cmd]
+"Extended"=-
