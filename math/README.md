@@ -8,6 +8,7 @@ Wow, did you know that computers can do math?!
 
 ##### n2w.py
 - Expands numbers in full (or at least attempts to).
+
 ```Usage: n2w.py <number>
 0 -> zero
 -11 -> negative eleven
