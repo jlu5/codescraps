@@ -13,6 +13,9 @@ def pyramid(s):
             l += 1
         
 if __name__ == "__main__":
-    import sys
-    s = ' '.join(sys.argv[1:])
-    if s: pyramid(s)
+    from sys import argv
+    s = ' '.join(argv[1:])
+    if s: 
+        pyramid(s)
+    else:
+        print("usage: %s <text>" % __file__)

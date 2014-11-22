@@ -1,0 +1,1 @@
+Scripts for my underused eggdrop install. There's literally one thing in here.

@@ -1,7 +1,8 @@
 #!/usr/bin/env python2
 import random, time, sys
 
-tries = fails = 0
+tries = 0
+fails = 0
 while True:
     if fails >= 5:
         print "\nIs this some sort of joke? I'm outta here."
@@ -32,10 +33,7 @@ while True:
     else: 
         if tries <= 10:
             print 'Wow, you got {} in only {} tries? Impressive!'.format(r, tries)
-        elif tries == 42:
-            print 'Ze magic number! \o/ (42)'
         else: 
             print 'Random number {} found! It took {} tries to get this!'.format(r, tries)
         raw_input()
         break
-

@@ -23,16 +23,19 @@ def factors(n):
     return sorted(set(_factors))
     
 if __name__ == '__main__':
-    from sys import argv
+    from sys import argv, exit
     try:
-        num = int(argv[1])
-    except (IndexError, ValueError):
-        if version_info[0] >= 3:
-            raw_input = input
-        num = raw_input("Enter a number to factor: ")
-    try:
-        res = factors(int(num))
-    except ValueError as e:
-        print("ValueError: %s" % e)
-    else:
-        print(res)
+        try:
+            num = int(argv[1])
+        except (IndexError, ValueError):
+            if version_info[0] >= 3:
+                raw_input = input
+            num = raw_input("Enter a number to factor: ")
+        try:
+            res = factors(int(num))
+        except ValueError as e:
+            print("ValueError: %s" % e)
+        else:
+            print(res)
+    except KeyboardInterrupt:
+        print("\nExiting on Ctrl+C...")

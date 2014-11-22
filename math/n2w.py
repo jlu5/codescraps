@@ -65,7 +65,6 @@ if __name__ == "__main__":
         n = float(argv[1])
         print(numToWords(int(n) if n.is_integer() else n))
     except (ValueError, IndexError):
-        print("example usages:")
-        for x in (0, 11, 109, 100100002536, -6, 
-            1234567890.12, 1020304050607, -8.02, 0.54321909): 
-            print("%s %s -> %s" % (basename(__file__), x, numToWords(x)))
+        print("Usage: %s <number>" % basename(__file__))
+        for x in (0, 11, 109.5, 100100006, -6, 1020304050607, -8.02, 0.0432):
+            print("%s -> %s" % (x, numToWords(x)))

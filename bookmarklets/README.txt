@@ -1,0 +1,1 @@
+Quick bookmarklets I put in my browser favourites.

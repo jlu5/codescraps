@@ -77,9 +77,8 @@ def redirectParse(url):
     if args.verbose:
         headers = r1.getheaders()
         for n in headers:
-            print("{}: {}".format(n[0], n[1]))
+            print("{}: {} / Target: {}".format(n[0], n[1], metatarget or L))
     if L:
-        if not metatarget: print("Target:", L)
         if L in locations and not ignoreloops:
             print("Redirect loop detected, aborting! (run with -n argument to ignore this)")
             sys.exit(2)
@@ -110,5 +109,4 @@ if __name__ == "__main__":
     t = args.timeout
     maxredirs = args.max_redirects
     ignoreloops = args.ignore_loops
-    if ignoreloops: print("Warning: redirect loop checking is disabled!")
     redirectParse(args.url)
