@@ -9,7 +9,8 @@ Wow, did you know that computers can do math?!
 ##### n2w.py
 - Expands numbers in full (or at least attempts to).
 
-```Usage: n2w.py <number>
+```
+Usage: n2w.py <number>
 0 -> zero
 -11 -> negative eleven
 109.5 -> one hundred nine point five
