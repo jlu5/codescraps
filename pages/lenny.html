@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<!-- Free software under the MIT License! https://github.com/GLolol/codescraps/blob/master/pages/lenny.html -->
+<head>
+<meta charset="utf-8">
+<title>le lenny face</title>
+<link href="lenny.css" rel="stylesheet">
+</head>
+<body>
+<script>
+var fonts = ['"Comic Sans MS", cursive, sans-serif', '"Arial Black", Gadget, sans-serif', 'Arial, "Liberation Sans", Helvetica, sans-serif', 'Georgia, serif', '"Times New Roman", "Liberation Serif", Times, serif', 'Impact, Charcoal, sans-serif', '"Lucida Sans Unicode", "Lucida Grande", sans-serif', 'Tahoma, Geneva, sans-serif', '"Trebuchet MS", Helvetica, sans-serif', 'Verdana, Geneva, sans-serif', '"Courier New", Courier, monospace', '"Lucida Console", Monaco, monospace', 'Consolas, monospace', '"Wide Latin", "Arial Black", Gadget, sans-serif', '"Adobe Garamond Pro", Garamond, Serif', '"Baskerville Old Face", Georgia, serif', '"Blackadder ITC", cursive, sans-serif', 'Algerian, serif', 'Chiller, cursive, serif', '"Lucida Calligraphy", cursive, sans-serif', '"Brush Script MT", cursive, sans-serif', '"Eras Light ITC", sans-serif', 'Ravie, sans-serif', 'Rockwell, sans-serif', '"Poplar Std", "Britannic Bold", sans-serif', '"Rosewood Std Regular", serif', 'Gigi, cursive, sans-serif', '"Palace Script MT", cursive, sans-serif', '"Niagara Engraved", "Niagara Solid", sans-serif'];
+var hits = 0;
+
+function changeFont() {
+    var rvalue = Math.floor(Math.random() * fonts.length)
+    var font = fonts[rvalue];
+    document.getElementById("text").style.fontFamily = document.getElementById("text2").innerHTML = font;
+    console.log("Hit! Setting font to: " + font)
+}
+</script>
+<p onmousemove="changeFont()" id="text"> ( ͡° ͜ʖ ͡°)</p>
+<div class="float">
+<p>Current font: <b id="text2">Move your mouse over the lenny face to change!</b></p>
+</div>
+</body>
+</html>

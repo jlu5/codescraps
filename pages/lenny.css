@@ -1,0 +1,11 @@
+html {
+    height: 99%;
+    background: linear-gradient(to bottom, #a7c7dc 0%,#85b2d3 100%);
+    font-family: sans-serif;
+    text-align: center;
+    font-size: large;
+}
+
+p#text {
+    font-size: 1000%;
+}

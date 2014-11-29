@@ -62,7 +62,7 @@ if __name__ == "__main__":
     from sys import argv
     from os.path import basename
     try: 
-        n = float(argv[1])
+        n = float(argv[1].replace(",", ""))
         print(numToWords(int(n) if n.is_integer() else n))
     except (ValueError, IndexError):
         print("Usage: %s <number>" % basename(__file__))

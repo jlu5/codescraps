@@ -1,0 +1,80 @@
+body {
+    font-family: "Consolas", monospace;
+    vertical-align: middle;
+    text-align: center;
+}
+
+div {
+    opacity: 0.0;
+    padding: 25px;
+    width: 25%;
+    position: relative;
+    font-size: large;
+    /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-play-state: running;
+    -webkit-animation-iteration-count:1;
+    -webkit-animation-fill-mode: forwards;
+    /* Standard syntax */
+    animation-duration: 2s;
+    animation-timing-function: ease;
+    animation-play-state: running;
+    animation-iteration-count:1;
+    animation-fill-mode: forwards;
+}
+
+div#box1 {
+    background: #FFCCCC;
+    animation-name: myfirst;
+    -webkit-animation-name: myfirst;
+}
+
+div#box2 {
+    margin-right: 0%;
+    margin-left: 70%;
+    background: #CCFFCC;
+    animation-name: second;
+    -webkit-animation-name: second;
+    -webkit-animation-delay: 2s;
+    animation-delay: 2s;
+}
+
+div#fadein {
+    animation-name: fadein;
+    -webkit-animation-name: fadein;
+    -webkit-animation-delay: 4s;
+    animation-delay: 4s;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    font-size: x-large;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes myfirst {
+    0%   {left:0px; top:0px;}
+    100% {opacity: 1; left:30%; top:0px;}
+}
+@-webkit-keyframes second {
+    0%   {right:0px; top:0px;}
+    100% {opacity: 1; right:30%; top:0px;}
+}
+@-webkit-keyframes fadein {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes myfirst {
+    0%   {left:0px; top:0px;}
+    100% {opacity: 1; left:30%; top:0px;}
+}
+@keyframes second {
+    0%   {right:0px; top:0px;}
+    100% {opacity: 1; right:30%; top:0px;}
+}
+@keyframes fadein {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
