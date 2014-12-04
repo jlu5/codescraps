@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>glow! - refresh to change!</title>
+<link href="glow.css" rel="stylesheet">
+</head>
+<body onload="setshadows()" onclick="setshadows()" onkeydown="setshadows()" >
+<script>
+var n = Math.floor(Math.random() * 27+3);
+var w = window.innerWidth;
+var h = window.innerHeight;
+// Retrieved from http://www.w3schools.com/html/html_colornames.asp 2014-11-29
+var colors = [
+"AliceBlue",
+"AntiqueWhite",
+"Aqua",
+"Aquamarine",
+"Azure",
+"Beige",
+"Bisque",
+"Black",
+"BlanchedAlmond",
+"Blue",
+"BlueViolet",
+"Brown",
+"BurlyWood",
+"CadetBlue",
+"Chartreuse",
+"Chocolate",
+"Coral",
+"CornflowerBlue",
+"Cornsilk",
+"Crimson",
+"Cyan",
+"DarkBlue",
+"DarkCyan",
+"DarkGoldenRod",
+"DarkGray",
+"DarkGreen",
+"DarkKhaki",
+"DarkMagenta",
+"DarkOliveGreen",
+"DarkOrange",
+"DarkOrchid",
+"DarkRed",
+"DarkSalmon",
+"DarkSeaGreen",
+"DarkSlateBlue",
+"DarkSlateGray",
+"DarkTurquoise",
+"DarkViolet",
+"DeepPink",
+"DeepSkyBlue",
+"DimGray",
+"DodgerBlue",
+"FireBrick",
+"FloralWhite",
+"ForestGreen",
+"Fuchsia",
+"Gainsboro",
+"GhostWhite",
+"Gold",
+"GoldenRod",
+"Gray",
+"Green",
+"GreenYellow",
+"HoneyDew",
+"HotPink",
+"IndianRed ",
+"Indigo  ",
+"Ivory",
+"Khaki",
+"Lavender",
+"LavenderBlush",
+"LawnGreen",
+"LemonChiffon",
+"LightBlue",
+"LightCoral",
+"LightCyan",
+"LightGoldenRodYellow",
+"LightGray",
+"LightGreen",
+"LightPink",
+"LightSalmon",
+"LightSeaGreen",
+"LightSkyBlue",
+"LightSlateGray",
+"LightSteelBlue",
+"LightYellow",
+"Lime",
+"LimeGreen",
+"Linen",
+"Magenta",
+"Maroon",
+"MediumAquaMarine",
+"MediumBlue",
+"MediumOrchid",
+"MediumPurple",
+"MediumSeaGreen",
+"MediumSlateBlue",
+"MediumSpringGreen",
+"MediumTurquoise",
+"MediumVioletRed",
+"MidnightBlue",
+"MintCream",
+"MistyRose",
+"Moccasin",
+"NavajoWhite",
+"Navy",
+"OldLace",
+"Olive",
+"OliveDrab",
+"Orange",
+"OrangeRed",
+"Orchid",
+"PaleGoldenRod",
+"PaleGreen",
+"PaleTurquoise",
+"PaleVioletRed",
+"PapayaWhip",
+"PeachPuff",
+"Peru",
+"Pink",
+"Plum",
+"PowderBlue",
+"Purple",
+"Red",
+"RosyBrown",
+"RoyalBlue",
+"SaddleBrown",
+"Salmon",
+"SandyBrown",
+"SeaGreen",
+"SeaShell",
+"Sienna",
+"Silver",
+"SkyBlue",
+"SlateBlue",
+"SlateGray",
+"Snow",
+"SpringGreen",
+"SteelBlue",
+"Tan",
+"Teal",
+"Thistle",
+"Tomato",
+"Turquoise",
+"Violet",
+"Wheat",
+"White",
+"WhiteSmoke",
+"Yellow",
+"YellowGreen",
+];
+function setshadows() {
+    document.getElementById("main").style.textShadow = null;
+    var shadows = [];
+    for (i = 0; i < n; i++) {
+        px1 = Math.floor(Math.random() * w -(w/2));
+        px2 = Math.floor(Math.random() * h -(h/2));
+        c = colors[Math.floor(Math.random() * colors.length)];
+        s = px1 + "px " + px2 + "px " + c;
+        shadows.push(s);
+        console.log(shadows.join(","));
+    }
+    document.getElementById("main").style.textShadow = shadows.join(",");
+    document.getElementById("main").style.color = c;
+}
+</script>
+<h1 id="main" title=":3">.</h1>
+</body>
+</html>
