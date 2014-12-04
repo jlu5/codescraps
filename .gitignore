@@ -5,6 +5,8 @@ __pycache__/
 *.rbc
 /.config
 *.bak
+*~
+*.save*
 
 # Windows specific things
 Thumbs.db
