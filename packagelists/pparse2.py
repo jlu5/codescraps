@@ -29,6 +29,8 @@ print """<!DOCTYPE HTML>
 <link rel="stylesheet" type="text/css" href="gstyle.css">
 </head>
 <body>
+<a href="javascript:history.back()">Go back</a>
+<br><br>
 <table>
 <tr>
 <th>Package Name</th>

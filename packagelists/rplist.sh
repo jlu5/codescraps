@@ -1,4 +1,4 @@
-for DIST in "sid" "sid-imports" "upstream-snapshots"
+for DIST in "sid" "sid-imports" "experimental" "wheezy-backports"
 do
     echo Processing lists for $DIST
     distname=`aptly snapshot list -raw | egrep -i ${DIST}-.{4}-.{2}-.{2} | sort -r | cut -d$'\n' -f1`
