@@ -1,5 +1,8 @@
 Registry tweaks for my Windows 7 systems. **You probably do not want to run these unless you know what you're doing.**
 
+##### AlwaysShowHidden.reg
+- Always show file extensions and hidden files. Also modifies the system defaults (for new users)
+
 ##### NoOEMBackground.reg
 - Disables Windows 7's OEM login screen background.
 

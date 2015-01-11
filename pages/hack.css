@@ -1,0 +1,13 @@
+body, .entry {
+    background-color: black;
+    color: #11EE11;
+}
+
+h1, p {
+    text-align: center;
+    color: #EEEE11;
+}
+
+#t5 {
+    color: #EE1111;
+}

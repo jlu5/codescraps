@@ -13,7 +13,6 @@ if __name__ == "__main__":
     root.title("Factor Finder")
 
     main = Frame(root, relief=RAISED, borderwidth=1)
-    # main.grid(column=0, row=0, sticky=(N, W, E, S))
     main.pack(fill=BOTH, expand=YES)
     for x in range(2):
         main.columnconfigure(x, pad=5,weight=1)
