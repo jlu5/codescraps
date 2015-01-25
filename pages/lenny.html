@@ -7,13 +7,13 @@
 <link href="lenny.css" rel="stylesheet">
 </head>
 <body>
+<script src="librandom.js"></script>
 <script>
 var fonts = ['"Comic Sans MS", cursive, sans-serif', '"Arial Black", Gadget, sans-serif', 'Arial, "Liberation Sans", Helvetica, sans-serif', 'Georgia, serif', '"Times New Roman", "Liberation Serif", Times, serif', 'Impact, Charcoal, sans-serif', '"Lucida Sans Unicode", "Lucida Grande", sans-serif', 'Tahoma, Geneva, sans-serif', '"Trebuchet MS", Helvetica, sans-serif', 'Verdana, Geneva, sans-serif', '"Courier New", Courier, monospace', '"Lucida Console", Monaco, monospace', 'Consolas, monospace', '"Wide Latin", "Arial Black", Gadget, sans-serif', '"Adobe Garamond Pro", Garamond, Serif', '"Baskerville Old Face", Georgia, serif', '"Blackadder ITC", cursive, sans-serif', 'Algerian, serif', 'Chiller, cursive, serif', '"Lucida Calligraphy", cursive, sans-serif', '"Brush Script MT", cursive, sans-serif', '"Eras Light ITC", sans-serif', 'Ravie, sans-serif', 'Rockwell, sans-serif', '"Poplar Std", "Britannic Bold", sans-serif', '"Rosewood Std Regular", serif', 'Gigi, cursive, sans-serif', '"Palace Script MT", cursive, sans-serif', '"Niagara Engraved", "Niagara Solid", sans-serif'];
 var hits = 0;
 
 function changeFont() {
-    var rvalue = Math.floor(Math.random() * fonts.length)
-    var font = fonts[rvalue];
+    var font = randomItem(fonts)
     document.getElementById("text").style.fontFamily = document.getElementById("text2").innerHTML = font;
     console.log("Hit! Setting font to: " + font)
 }

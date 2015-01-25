@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- Source: https://github.com/GLolol/codescraps/tree/master/pages -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Page full of faces!</title>
+<link href="face.css" rel="stylesheet">
+</head>
+<body onload="face()" onclick="face()" onkeydown="face()" >
+
+<script src="librandom.js"></script>
+<script>
+function face (){
+    var images = document.getElementsByTagName("img")
+    while (images[0]) {
+        images[0].parentNode.removeChild(images[0]);
+    }
+    
+    var n = randInt(5, 15)
+    // This is just a joke for added affect, please don't be offended
+    var responses = ["i watch you as you sleep", "i know where you live", "how are you cutie",
+        "you spin me right round baby right round", "( ͡° ͜ʖ ͡°)", "let's be friends", "i'm an image",
+        "go and click view source, i dare you", "your computer is mine now...", "click me!"]
+    for (i = 0; i < n; i++) {
+        // var size = Math.ceil(Math.random() * 20) * 20;
+        var size = randInt(1, 22) * 18;
+        console.log("Choosing size: "+size+"x"+size);
+        // var opacity = (Math.ceil(Math.random() * 50) + 50) / 100;
+        var opacity = randRange(0.5, 1);
+        console.log("Choosing opacity: "+opacity);
+        var img = document.createElement("img");
+        img.src = "res/face.png";
+        img.width = img.height = size;
+        img.style.opacity = opacity
+        img.alt = img.title = randomItem(responses)
+        document.body.appendChild(img);
+        console.log("Added "+n+" images to page.")
+    }
+}
+</script>
+
+<audio loop preload="auto" autoplay>
+<source src="res/Local Forecast - Slower.mp3" type="audio/mpeg">
+</audio>
+
+<div onclick="this.style.display = 'none'">
+<p>Music credits (click to close):</p>
+<pre>"Local Forecast - Slower" Kevin MacLeod (incompetech.com) 
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/</pre>
+</div>
+</body>
+</html>

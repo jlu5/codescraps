@@ -1,4 +1,5 @@
 /artifacts
+/pages/res
 __pycache__/
 *.py[cod]
 *.gem
