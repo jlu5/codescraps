@@ -11,19 +11,19 @@ if __name__ == "__main__":
     root = Tk()
     root.title("SlopeCalc!")
 
-    main = Frame(root)
-    main.grid(column=0, row=0, sticky=(N, W, E, S))
-    for x in range(5):
-        main.columnconfigure(x, pad=5,weight=1)
-        main.rowconfigure(x, pad=5,weight=1)
-    main.pack(fill=BOTH, expand=YES)
+    # Make the window widgets resize automatically
+    for x in range(4):
+        root.columnconfigure(x, weight=1)
+        root.rowconfigure(x, weight=1)
 
-    # Oh god, there's got to be a better way to initialize this...
-    x1, y1, x2, y2, out, extra = StringVar(), StringVar(), StringVar(), \
-        StringVar(), StringVar(), StringVar()
+    out, extra = StringVar(), StringVar()
+    _keys = ("x1", "y1", "x2", "y2")
 
     def _slopeWrapper(*args):
-        vars = tuple(map(float, map(Entry.get, (x1_entry,y1_entry,x2_entry,y2_entry))))
+        global _keys
+        vars = [numberwidgets[k] for k in _keys]
+        vars = map(float, map(Entry.get, vars))
+        vars = tuple(vars)
         if len(set(vars)) > 1:
             try:
                 m = getslope(*vars)
@@ -38,33 +38,25 @@ if __name__ == "__main__":
             except ValueError:
                 pass
 
-    # And this too...
-    x1_entry = Entry(main, width=7, textvariable=x1)
-    Label(main, text="x1").grid(column=0, row=0)
-    x1_entry.grid(column=0, row=1)
+    # This dict allows us to declare our variables in a loop, saving
+    # space and reducing code duplication
+    numberwidgets = {}
+    for nw in _keys:
+        position = _keys.index(nw)
+        numberwidgets[nw] = Entry(root, width=7)
+        Label(root, text=nw).grid(column=position, row=0)
+        numberwidgets[nw].grid(column=position, row=1)
 
-    y1_entry = Entry(main, width=7, textvariable=y1)
-    Label(main, text="y1").grid(column=1, row=0)
-    y1_entry.grid(column=1, row=1)
-
-    x2_entry = Entry(main, width=7, textvariable=x2)
-    Label(main, text="x2").grid(column=2, row=0)
-    x2_entry.grid(column=2, row=1)
-
-    y2_entry = Entry(main, width=7, textvariable=y2)
-    Label(main, text="y2").grid(column=3, row=0)
-    y2_entry.grid(column=3, row=1)
-
-    Label(main, textvariable=out).grid(column=0, row=2, columnspan=4)
-    Button(main, text="Calculate", command=_slopeWrapper).grid(column=2,
+    Label(root, textvariable=out).grid(column=0, row=2, columnspan=4)
+    Button(root, text="Calculate", command=_slopeWrapper).grid(column=2,
         row=3, columnspan=2)
-    Label(main, textvariable=extra).grid(column=0, row=3, columnspan=2)
+    Label(root, textvariable=extra).grid(column=0, row=3, columnspan=2)
 
     # Pad the app so it doesn't look all squished
-    for child in main.winfo_children():
+    for child in root.winfo_children():
         child.grid_configure(padx=5, pady=5)
 
-    x1_entry.focus()
+    numberwidgets['x1'].focus()
     root.bind('<Return>', _slopeWrapper)
 
     root.mainloop()

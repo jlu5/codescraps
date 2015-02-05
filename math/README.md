@@ -19,6 +19,12 @@ Usage: n2w.py <number>
 0.0432 -> zero point zero four three two
 ```
 
+##### n2wtk.py
+- GUI version of **n2w.py**.
+
+##### percentchange.py
+- GUI Percentage change calculator in Tkinter (this has been personally useful more than once).
+
 ##### slope.py
 - Simple slope/slope-intercept calculator.
 
