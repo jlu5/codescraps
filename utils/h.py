@@ -13,11 +13,6 @@ except ImportError:
     from urllib.parse import urljoin
     from html.parser import HTMLParser as HTMLParser
 
-def _format_seconds(n):
-    if n < 0: print("Warning, negative integer for meta-refresh delay value!")
-    if n == 0: return "instant"
-    if n == 1: return "after 1 second"
-    return "after {} seconds".format(n)
 class metarefreshParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == "meta":
@@ -26,68 +21,73 @@ class metarefreshParser(HTMLParser):
                 if attrs['http-equiv'].lower() == "refresh":
                     ct = attrs['content'].lower().split("url=", 1)
                     delay = int(ct[0].split(";")[0])
-                    print("Meta refresh target: {} ({})".format(ct[1], _format_seconds(delay)))
+                    print("Meta refresh target: {} ({})".format(ct[1], self._format_seconds(delay)))
                     global L, metatarget
                     L = ct[1]
                     metatarget = True
-            except KeyError: pass
+            except KeyError:
+                pass
             except ValueError: 
                 print("Meta-refresh detected, but there was an error parsing it (non-standard HTML?)")
             except IndexError:
-                print("Meta-refresh detected: current page ({})".format(_format_seconds(attrs['content'])))
-metaparse = metarefreshParser()
+                print("Meta-refresh detected: current page ({})".format(self._format_seconds(attrs['content'])))
 
-nredirs, metatarget, locations = 1, False, []
-def redirectParse(url):
-    """Recursively looks up HTTP/meta refresh redirects."""
-    addr = url.lower()
-    global L, nredirs, locations, maxredirs, metatarget, ignoreloops
-    L = metatarget = 0
-    try:
-        addr = addr.split("://", 1)[1] # Remove any http(s):// elements
-    except IndexError: pass
-    try:
-        addr = addr.split("/", 1) # Split links in half (as in "site.web/index.htm")
-    except IndexError: pass
-    if args.ssl or url.lower().startswith("https"):
-        h1 = httplib.HTTPSConnection(addr[0], timeout=t)
-    else:
-        h1 = httplib.HTTPConnection(addr[0], timeout=t)
-    try:
-        h1.putrequest("GET","/"+addr[1])
-    except IndexError: h1.putrequest("GET","/")
-    # This is needed for some strange reason; otherwise you get a HTTP 400 on some servers.
-    h1.putheader("Accept","*/*") 
-    try:
+ 
+    def _format_seconds(self, n):
+        if n < 0: print("Warning, negative integer for meta-refresh delay value!")
+        if n == 0: return "instant"
+        if n == 1: return "after 1 second"
+        return "after {} seconds".format(n)
+class redirectParser():
+    def __init__(self):
+        self.nredirs = 0
+        self.metatarget = False
+        self.locations = []
+
+    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, verbose=False, maxredirs=10, ignoreloops=False):
+        """Recursively looks up HTTP/meta refresh redirects."""
+        addr = url
+        L = []
+        try:
+            addr = addr.split("://", 1)[1] # Remove any http(s):// elements
+        except IndexError:
+            pass
+        try:
+            addr = addr.split("/", 1) # Split links in half (as in "site.web/index.htm")
+        except IndexError: pass
+        if ssl or url.lower().startswith("https"):
+            h1 = httplib.HTTPSConnection(addr[0], timeout=t)
+        else:
+            h1 = httplib.HTTPConnection(addr[0], timeout=t)
+        try:
+            h1.putrequest("GET", "/"+addr[1])
+        except IndexError:
+            h1.putrequest("GET", "/")
+        # This is needed for some strange reason; otherwise you get a HTTP 400 on some servers.
+        h1.putheader("Accept","*/*") 
         h1.endheaders()
         r1 = h1.getresponse()
-    except socket.timeout as e:
-        print("Connection timed out.")
-        sys.exit(1)
-    except socket.error as e:
-        if e.errno == -2:
-           print("Unresolved host or invalid hostname.")
+        reason = (r1.reason or "(Unknown)") + ":"
+        print(r1.status, reason, url)
+        if r1.status == 200 and not disable_meta_refresh:
+            metaparse = metarefreshParser()
+            metaparse.feed(r1.read().decode("utf-8", "replace"))
         else:
-            print("Caught unhandled socket.error, aborting: " + str(e))
-        sys.exit(1)
-    print(r1.status, r1.reason+":", url)
-    if r1.status == 200 and not args.disable_meta_refresh:
-        metaparse.feed(r1.read().decode("utf-8", "replace"))
-    else: L = r1.getheader('location') 
-    if args.verbose:
-        headers = r1.getheaders()
-        for n in headers:
-            print("{}: {} / Target: {}".format(n[0], n[1], metatarget or L))
-    if L:
-        if L in locations and not ignoreloops:
-            print("Redirect loop detected, aborting! (run with -n argument to ignore this)")
-            sys.exit(2)
-        sleep(0.1)
-        if nredirs < maxredirs:
-            nredirs += 1
-            locations.append(L)
-            return redirectParse(urljoin(url, L))
-        else: print("Maximum amount of redirects ({}) reached. Try running the script with a higher -m limit!".format(maxredirs))
+            L = r1.getheader('location') 
+        if verbose:
+            headers = r1.getheaders()
+            for n in headers:
+                print("{}: {} / Target: {}".format(n[0], n[1], metatarget or L))
+        if L:
+            if L in self.locations and not ignoreloops:
+                raise ValueError("Redirect loop detected, aborting! (run with -n argument to ignore this)")
+            sleep(0.1)
+            if self.nredirs < maxredirs:
+                self.nredirs += 1
+                self.locations.append(L)
+                return self.parse(urljoin(url, L), timeout, ssl, disable_meta_refresh, verbose, maxredirs, ignoreloops)
+            else:
+               raise OverflowError("Maximum amount of redirects ({}) reached. Try running the script with a higher -m limit!".format(maxredirs))
 
 if __name__ == "__main__": 
     ### Handle arguments nicely using argparse
@@ -109,4 +109,6 @@ if __name__ == "__main__":
     t = args.timeout
     maxredirs = args.max_redirects
     ignoreloops = args.ignore_loops
-    redirectParse(args.url)
+    
+    parser = redirectParser()
+    parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects, args.ignore_loops)
