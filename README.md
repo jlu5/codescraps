@@ -10,7 +10,7 @@ Enjoy!
 - All things math related!
 
 ##### [random/](random/README.md)
-- Random scripts for mostly amusement purposes.
+- Random games and scripts for amusement purposes.
 
 ##### [utils/](utils/README.md)
 - Slightly useful utilities.
