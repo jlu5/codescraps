@@ -7,7 +7,6 @@ import re
 from sys import argv
 
 yesterday = datetime.datetime.now() - datetime.timedelta(days = 1)
-print(argv)
 if len(argv) >= 2:
     filelist = argv[1:]
 else:

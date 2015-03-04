@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from factors import factors
 
 def _gcf(first, second):
