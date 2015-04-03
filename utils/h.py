@@ -111,4 +111,7 @@ if __name__ == "__main__":
     ignoreloops = args.ignore_loops
     
     parser = redirectParser()
-    parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects, args.ignore_loops)
+    try:
+        parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects, args.ignore_loops)
+    except KeyboardInterrupt:
+        print('Exiting on Ctrl-C.')
