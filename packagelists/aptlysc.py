@@ -7,8 +7,8 @@ import re
 import time
 
 def _error():
-    print("error: unknown command, valid commands are 'getdup', 'snapshot',"
-          " 'refreshmirrors'")
+    print("error: unknown command, valid commands are 'getdup', 'msnapshot',"
+          " 'refreshmirrors', 'purge', 'rsnapshot'")
     sys.exit(1)    
 
 def getdups(reponame):
@@ -28,6 +28,19 @@ def getdups(reponame):
             if len(v) > 1: 
                 print 'Duplicate package: %s (%s)' % (p, ', '.join(v))
 
+def purge(reponame, packages):
+    if reponame not in repos:
+        print "error: repo '%s' does not exist!" % reponame
+        sys.exit(2)
+    s = ['{0} | $Source ({0})'.format(p) for p in packages]
+    s = ' | '.join(s)
+    if s:
+        sys.stdout.write(subprocess.check_output('aptly repo remove {} {!r}'.format(
+           reponame, s), shell=True))
+    else:
+        print('no matching packages')
+        sys.exit(3)
+
 try:
     command = sys.argv[1].lower()
 except IndexError:
@@ -41,13 +54,23 @@ if command == 'getdup':
         print 'error: needs repo name!'
         sys.exit(2)
     getdups(params[0])
-elif command == 'snapshot':
+elif command == 'msnapshot':
     for mir in mirrors:
         if (params and re.search(params[0], repo)) or not params:
             sys.stdout.write(subprocess.check_output('aptly snapshot create {r}-{d} from mirror {r}'.format(
                 r=mir,d=time.strftime('%Y-%m-%d')), shell=True))
+elif command == 'rsnapshot':
+    for mir in repos:
+        if (params and re.search(params[0], repo)) or not params:
+            sys.stdout.write(subprocess.check_output('aptly snapshot create {r}-{d} from repo {r}'.format(
+                r=mir,d=time.strftime('%Y-%m-%d')), shell=True))
 elif command == 'refreshmirrors':
     for m in mirrors:
         sys.stdout.write(subprocess.check_output('aptly mirror update %s' % m, shell=True))
+elif command == 'purge':
+    if len(sys.argv) < 3:
+        print 'error: needs repo name!'
+        sys.exit(2)
+    purge(params[0], params[1:])
 else:
     _error()
