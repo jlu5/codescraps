@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function, unicode_literals
 import sys
-import argparse
 import socket
 from time import sleep
 try:
@@ -91,6 +90,7 @@ class redirectParser():
 
 if __name__ == "__main__": 
     ### Handle arguments nicely using argparse
+    import argparse
     def _positivefloat(value):
         ivalue = float(value)
         if ivalue <= 0:

@@ -1,5 +1,7 @@
 /artifacts
 /pages/res
+/wip
+
 __pycache__/
 *.py[cod]
 *.gem
