@@ -29,7 +29,7 @@ def plist(dist):
     # Look for the latest snapshot of the dist first (using my personally favourite format ${dist}-YYYY-MM-DD)
     try:
         try:
-            _snapshotRe = re.compile(r'^%s-\d{4}-\d{2}-\d{2}$' % dist)
+            _snapshotRe = re.compile(r'^%s-\d{4}-\d{2}-\d{2}' % dist)
             snapshotname = [s for s in snapshotlist if _snapshotRe.search(s)][-1]
         except IndexError:  # If that fails, just treat it as a repo
             print('Using packages in repo %r...' % dist)
