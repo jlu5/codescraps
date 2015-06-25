@@ -4,6 +4,7 @@ import subprocess
 import sys
 import shutil
 import os
+import re
 
 ### BEGIN CONFIGURATION VARIABLES ###
 archs = ("amd64", "i386")
@@ -22,17 +23,19 @@ repolist += mirrorlist
 repolist += extradists
 snapshotlist = subprocess.check_output(("aptly", "snapshot", "list", "-raw")).decode('utf-8').splitlines()
 
-
 def plist(dist):
     packagelist = []
     unique = set()
     # Look for the latest snapshot of the dist first (using my personally favourite format ${dist}-YYYY-MM-DD)
     try:
         try:
-            snapshotname = [s for s in snapshotlist if s.startswith(dist)][-1]
+            _snapshotRe = re.compile(r'^%s-\d{4}-\d{2}-\d{2}$' % dist)
+            snapshotname = [s for s in snapshotlist if _snapshotRe.search(s)][-1]
         except IndexError:  # If that fails, just treat it as a repo
+            print('Using packages in repo %r...' % dist)
             packages_raw = subprocess.check_output(("aptly", "repo", "show", "-with-packages", dist)).splitlines()
         else:
+            print('Using packages in snapshot %r...' % snapshotname)
             packages_raw = subprocess.check_output(("aptly", "snapshot", "show", "-with-packages", snapshotname)).splitlines()
     except subprocess.CalledProcessError:  # It broke, whatever...
         return
