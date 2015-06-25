@@ -2,16 +2,13 @@
 
 This folder contains some scripts I use for my personal APT repository @ http://packages.overdrive.pw/
 
-Most of these scripts use stdout for their output, meaning it can be automated/crontabbed using pipes.
+### Contents
 
-### Highlights
+##### depends.py
+ * Outputs dependency info from a package's `debian/control` file. Uses STDIN and STDOUT for input/output.
 
-##### pparse.py & pparse2.py
- * Scripts used to get lists of packages in a repository (package name, architecture, version) from the repository handling tool. 
- * **pparse.py** handles '[reprepro](//mirrorer.alioth.debian.org/) list' output, and **pparse2.py** handles lists for [aptly](http://www.aptly.info/). The latter is the one currently being used as of September 6, 2014.
+##### pparse3.py
+ * Grabs repository listings from aptly's raw command line output.
 
-##### rplist.sh
- * Automates the above process using bash for loops.
- 
-##### aptlysc.py
- * Script automating some slightly more complicated functions such as finding duplicate packages in repos. Still very much a WIP. 
+##### aptlysc.py (*really bad code warning*)
+ * A surprisingly hacky automation wrapper for aptly.
