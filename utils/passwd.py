@@ -1,10 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import random
 import string
 import sys
-
-if sys.version_info[0] >= 3:
-    raw_input = input
 
 def passwd(plen=16):
     rg = random.SystemRandom()
@@ -17,7 +14,6 @@ def _fail():
     sys.exit(1)
    
 if __name__ == "__main__":
-    import sys
     try:
         plen = int(sys.argv[1])
     except IndexError:
@@ -27,9 +23,3 @@ if __name__ == "__main__":
     if plen <= 0:
         _fail()
     print(passwd(plen))
-    try:
-        # make it so it doesn't close automatically
-        if sys.argv[2] == "--hover":
-            raw_input()
-    except:
-        pass
