@@ -35,7 +35,7 @@ def purge(reponame, packages):
     s = ['{0} | $Source ({0})'.format(p) for p in packages]
     s = ' | '.join(s)
     if s:
-        sys.stdout.write(subprocess.check_output(['aptly', 'repo', 'remove', reponame, s]))
+        sys.stdout.write(subprocess.check_output(['aptly', 'repo', 'remove', reponame, s]).decode('utf-8'))
     else:
         print('no matching packages')
         sys.exit(3)
@@ -57,16 +57,16 @@ if command == 'getdup':
 elif command == 'msnapshot':
     mirrors = params or mirrors
     for mir in mirrors:
-        sys.stdout.write(subprocess.check_output(['aptly', 'snapshot', 'create', '%s-%s' % (mir, date), 'from', 'mirror', mir]))
+        sys.stdout.write(subprocess.check_output(['aptly', 'snapshot', 'create', '%s-%s' % (mir, date), 'from', 'mirror', mir]).decode('utf-8'))
 
 elif command == 'rsnapshot':
     repos = params or repos
     for repo in repos:
-        sys.stdout.write(subprocess.check_output(['aptly', 'snapshot', 'create', '%s-%s' % (repo, date), 'from', 'repo', repo]))
+        sys.stdout.write(subprocess.check_output(['aptly', 'snapshot', 'create', '%s-%s' % (repo, date), 'from', 'repo', repo]).decode('utf-8'))
 
 elif command == 'refreshmirrors':
     for m in mirrors:
-        sys.stdout.write(subprocess.check_output(['aptly', 'mirror', 'update', m]))
+        sys.stdout.write(subprocess.check_output(['aptly', 'mirror', 'update', m]).decode('utf-8'))
 elif command == 'purge':
     if len(sys.argv) < 3:
         print('error: needs repo name!')
