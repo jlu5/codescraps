@@ -1,4 +1,6 @@
 #!/usr/bin/env python2
+"""bconv.py - Script to parse relayer text in chatlogs, making them available to stats generators like PISG."""
+
 ### Configuration ###
 
 import datetime
@@ -25,6 +27,8 @@ convpart = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-
 convquit = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? has quit .*", re.IGNORECASE)
 convnick = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? is now known as \x03\d\d(.*?)\x03", re.IGNORECASE)
 convkick = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) has been kicked from .*? by (.*?) \((.*?)\)", re.IGNORECASE)
+# PISG doesn't like slashes in nicks. Clobber them.
+convslash = re.compile(r"<(.*?)\/(.*?)>", re.IGNORECASE)
 
 def _conv(infile):
     inread = open(infile)
@@ -40,11 +44,13 @@ def _conv(infile):
         line = convnick.sub(r"*** \1 is now known as \2", line)
         line = convkick.sub(r"*** \1 was kicked by \2 (\3)", line)
         line = convme.sub(r"* \1", line)
+        line = convslash.sub(r"<\1>", line)
         outfile.write(line)
     inread.close()
     outfile.close()
+    return outfilename
 
 for file in sorted(filelist):
-    _conv(file)
-    print('Converted file: %s' % file)
+    outname = _conv(file)
+    print('Converted file: %s => %s' % (file, outname))
 print('Finished, converted a total of %s file(s).' % len(filelist))
