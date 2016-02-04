@@ -1,37 +1,53 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import sys, random, string
 from time import sleep
 
-class RJError(Exception):
-    pass
+irccolors = ['\x03'+str(x).zfill(2) for x in range(16)]
+
 def randomjunk(bytes, colored=False, no_delay=True, no_whitespace=False,
     no_digits=False, no_symbols=False, irccolor=False):
     """Generates random junk."""
-    b = 0
-    s = string.ascii_letters + (" \n" if not no_whitespace else '')
-    if not no_symbols: s += string.punctuation
-    if not no_digits: s += string.digits
+    amount_of_bytes = 0
+
+    chars = string.ascii_letters + (" \n" if not no_whitespace else '')
+
+    if not no_symbols:
+        chars += string.punctuation
+    if not no_digits:
+        chars += string.digits
+
     if colored:
         try: 
             from colorama import init, Fore
         except ImportError:
-            raise RJError("Error: The color option requires the colorama"
+            raise ImportError("Error: The color option requires the colorama"
             " module to be installed, get it from "
             "http://pypi.python.org/pypi/colorama\n")
         else:
             init()
-    while b < bytes:
-        sys.stdout.write(random.choice(s))
-        if not no_delay: sleep(random.uniform(0.0005, 0.01))
-        b += 1
+
+    if irccolor:  # If in IRC mode, print a colour to start
+        print(random.choice(irccolors), end='')
+
+    while amount_of_bytes < bytes:
+
+        # print the random bytes, without a trailing newline
+        print(random.choice(chars), end='')
+
+        if not no_delay:
+            # Delay text output to make it seem like a flowing wall of gibberish
+            sleep(random.uniform(0.0005, 0.01))
+
+        amount_of_bytes += 1
         if irccolor and random.random() >= 0.75:
-            sys.stdout.write(random.choice(['\x03'+str(x).zfill(2) for x in(range(16))]))
+            print(random.choice(irccolors), end='')
         elif colored and random.random() >= 0.8:
-            sys.stdout.write(random.choice(([getattr(Fore, x) for x in 
-            ('BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN',
-            'WHITE', 'RESET')])))
+            print(random.choice(([getattr(Fore, x) for x in 
+                  ('BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN',
+                   'WHITE', 'RESET')])), end='')
 
 if __name__ == "__main__":
+
     import argparse
     parser = argparse.ArgumentParser(description='Generates random junk, with'
         ' optional ANSI colors! (using the colorama module)')
@@ -52,8 +68,9 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--irc", help="Use IRC color codes in output"
         " (this overrides the --color option", action='store_true')
     args = parser.parse_args()
-    try: randomjunk(args.bytes, args.color, args.no_delay, 
-        args.no_whitespace, args.no_digits, args.no_symbols, args.irc)
-    except KeyboardInterrupt: sys.exit()
-    except RJError as e: sys.stderr.write(str(e))
-    # else: sys.stderr.write("\n\nDone!\n")
+
+    try:
+        randomjunk(args.bytes, args.color, args.no_delay, 
+                   args.no_whitespace, args.no_digits, args.no_symbols, args.irc)
+    except KeyboardInterrupt:
+        sys.exit()
