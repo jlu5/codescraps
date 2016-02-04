@@ -19,14 +19,14 @@ outfile_prefix = ''
 outfile_suffix = '.conv'
 
 ### Converter ###
-convmsg = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 <-?(?:\x03|\d)*-?(.*?)\x03?>", re.I)
-convme = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 \* -?(?:\x03|\d)*-?(.*?)\x03?", re.I)
-convmode = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) set mode (.*?) on .*", re.IGNORECASE)
-convjoin = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? \((.*?)\) has joined .*", re.IGNORECASE)
-convpart = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? \((.*?)\) has parted .*", re.IGNORECASE)
-convquit = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? has quit .*", re.IGNORECASE)
-convnick = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? is now known as \x03\d\d(.*?)\x03", re.IGNORECASE)
-convkick = re.compile(r"<(?:Nebulae.*?|Lily.*?)> \x02\[.+?\]\x02 -?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) has been kicked from .*? by (.*?) \((.*?)\)", re.IGNORECASE)
+convmsg = re.compile(r"<.+?> \x02?\[.+?\]\x02? <-?(?:\x03|\d)*-?(.*?)\x03?>", re.I)
+convme = re.compile(r"<.+?> \x02?\[.+?\]\x02? \* -?(?:\x03|\d)*-?(.*?)\x03?", re.I)
+convmode = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) set mode (.*?) on .*", re.IGNORECASE)
+convjoin = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? \((.*?)\) has joined .*", re.IGNORECASE)
+convpart = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? \((.*?)\) has parted .*", re.IGNORECASE)
+convquit = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? has quit .*", re.IGNORECASE)
+convnick = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? is now known as \x03\d\d(.*?)\x03", re.IGNORECASE)
+convkick = re.compile(r"<.+?> \x02?\[.+?\]\x02? -?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) has been kicked from .*? by (.*?) \((.*?)\)", re.IGNORECASE)
 # PISG doesn't like slashes in nicks. Clobber them.
 convslash = re.compile(r"<(.*?)\/(.*?)>", re.IGNORECASE)
 
