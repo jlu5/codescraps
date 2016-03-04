@@ -1,15 +1,13 @@
 # codescraps
 
-GLolol's collection of code scraps. Most of the code here is licensed under the MIT license (see [LICENSE](LICENSE)), unless otherwise specified.
-
-Enjoy!
+A collection of code scraps. All under the [MIT license](LICENSE), unless otherwise specified.
 
 ## Highlights
 
 ##### [math/](math/README.md)
 - All things math related!
 
-##### [random/](random/README.md)
+##### [games/](games/README.md)
 - Random games and scripts for amusement purposes.
 
 ##### [utils/](utils/README.md)

@@ -1,6 +1,6 @@
 ## packagelists/
 
-This folder contains some scripts I use for my personal APT repository @ http://packages.overdrive.pw/
+This folder contains some scripts I use for my personal APT repository @ http://packages.overdrivenetworks.com/
 
 ### Contents
 
