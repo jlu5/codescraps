@@ -1,133 +1,133 @@
 #!/usr/bin/env python
 from __future__ import print_function, unicode_literals
+
 import sys
 import socket
 from time import sleep
+import logging
 try:
     import httplib
     from HTMLParser import HTMLParser
-    from urlparse import urljoin
+    from urlparse import urljoin, urlparse
 except ImportError:
     import http.client as httplib
-    from urllib.parse import urljoin
+    from urllib.parse import urljoin, urlparse
     from html.parser import HTMLParser as HTMLParser
 
-class metarefreshParser(HTMLParser):
-    def handle_starttag(self, tag, attrs):
-        if tag == "meta":
-            attrs = dict(attrs)
-            try:
-                if attrs['http-equiv'].lower() == "refresh":
-                    ct = attrs['content'].lower().split("url=", 1)
-                    delay = int(ct[0].split(";")[0])
-                    print("Meta refresh target: {} ({})".format(ct[1], self._format_seconds(delay)))
-                    global L, metatarget
-                    L = ct[1]
-                    metatarget = True
-            except KeyError:
-                pass
-            except ValueError: 
-                print("Meta-refresh detected, but there was an error parsing it (non-standard HTML?)")
-            except IndexError:
-                print("Meta-refresh detected: current page ({})".format(self._format_seconds(attrs['content'])))
-
- 
-    def _format_seconds(self, n):
-        if n < 0: print("Warning, negative integer for meta-refresh delay value!")
-        if n == 0: return "instant"
-        if n == 1: return "after 1 second"
-        return "after {} seconds".format(n)
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    logging.warning("bs4 is not installed. Meta refresh parsing will be disabled.")
+    BeautifulSoup = None
 
 class redirectParser():
     def __init__(self):
         self.nredirs = 0
-        self.metatarget = False
-        self.locations = []
+        self.visited = []  # Store list of URLs passed through
 
-    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, verbose=False, maxredirs=10, ignoreloops=False):
-        """Recursively looks up HTTP/meta refresh redirects."""
-        addr = url
-        L = []
+    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, verbose=False, maxredirs=10):
+        """Recursively looks up HTTP and meta refresh redirects."""
+        assert not url.startswith(('/', '\\')) # Trying to lookup "/" will freeze the app?!
+
+        addr = urlparse(url)
+        target = ''
+        site = addr.netloc.encode('idna').decode()
+        assert site, "Invalid URL %s" % url
+
+        # Implicitly enable SSL on https:// links, if not already.
+        if ssl or addr.scheme == 'https':
+            http = httplib.HTTPSConnection(site, timeout=timeout)
+        else:
+            http = httplib.HTTPConnection(site, timeout=timeout)
+
+        # Send a GET request to the desired address.
         try:
-            addr = addr.split("://", 1)[1] # Remove any http(s):// elements
+            http.putrequest("GET", "/"+addr.path)
         except IndexError:
-            pass
-        try:
-            addr = addr.split("/", 1) # Split links in half (as in "site.web/index.htm")
-        except IndexError: pass
-        assert not url.startswith(('/', '\\')) # Trying to lookup / will freeze the app...
-        if ssl or url.lower().startswith("https"):
-            h1 = httplib.HTTPSConnection(addr[0], timeout=t)
-            ssl = True
-        else:
-            h1 = httplib.HTTPConnection(addr[0], timeout=t)
-        try:
-            h1.putrequest("GET", "/"+addr[1])
-        except IndexError:
-            h1.putrequest("GET", "/")
-        # This is needed for some strange reason; otherwise you get a HTTP 400 on some servers.
-        h1.putheader("Accept","*/*") 
-        h1.endheaders()
-        r1 = h1.getresponse()
-        reason = (r1.reason or "(Unknown)") + ":"
-        if r1.status == 200 and not disable_meta_refresh:
-            metaparse = metarefreshParser()
-            metaparse.feed(r1.read().decode("utf-8", "replace"))
-        else:
-            L = r1.getheader('location') 
-        if verbose:
-            headers = r1.getheaders()
-            print('\nHeader data for {}:\n'.format(url))
-            for n in headers:
-                print("{}: {}".format(n[0], n[1]))
-            print()
-        if 'http://' not in url and 'https://' not in url:
-            # This fixes urljoin() returning just '/' when the initial query didn't have a schame
-            # e.g. urljoin('github.com', '/') => '/'
-            if ssl:
-                url = 'https://' + url
-            else:
-                url = 'http://' + url
-        real_L = urljoin(url, L)
-        if r1.status in (301, 302):
-            print(r1.status, reason, url, '=>', real_L)
-        else:
-            print(r1.status, reason, url)
-        if L:
-            if L in self.locations and not ignoreloops:
-                raise ValueError("Redirect loop detected, aborting! (run with -n argument to ignore this)")
-            sleep(0.1)
+            # addr[1] may be empty if we're requesting a root domain (e.g. "github.com").
+            http.putrequest("GET", "/")
+
+        # This header is needed for some reason; otherwise you get a HTTP 400 on some servers.
+        http.putheader("Accept", "*/*")
+        http.endheaders()
+
+        # Fetch the response from the GET request.
+        data = http.getresponse()
+
+        if data.status == 200 and BeautifulSoup and not disable_meta_refresh:
+            # If the code was a 200 OK, parse meta refresh links if enabled.
+            html = BeautifulSoup(data.read(), "html.parser")
+            for tag in html.find_all('meta'):
+                # A meta refresh tag looks something like this:
+                #     <meta http-equiv="refresh" content="5; url=http://example.com/">
+                # or without a redirect:
+                #     <meta http-equiv="refresh" content="5">
+                if tag.get("http-equiv"):
+                    content = tag.get("content", '')
+                    content = content.lower()
+                    try:
+                        target = content.split("url=", 1)[1]
+                        break
+                    except IndexError:
+                        # Not a valid redirect, ignore this.
+                        continue
+
+        else:  # Get the target location for 30x redirects
+            target = data.getheader('location')
+
+        # The resulting target was a relative link. Format this appropriately by joining the target
+        # with the requested URL.
+        if target:
+            parsed_target = urlparse(target)
+            if not parsed_target.netloc:
+                target = urljoin(url, target)
+
+        self.visited.append((data, url, target))
+
+        if target:
             if self.nredirs < maxredirs:
                 self.nredirs += 1
-                self.locations.append(L)
-                return self.parse(real_L, timeout, ssl, disable_meta_refresh, verbose, maxredirs, ignoreloops)
-            else:
-               raise OverflowError("Maximum amount of redirects ({}) reached. Try running the script with a higher -m limit!".format(maxredirs))
+                # Sleep to avoid chewing all the CPU
+                sleep(0.1)
 
-if __name__ == "__main__": 
+                # Recursively lookup redirects for the target URL.
+                return self.parse(target, timeout, ssl, disable_meta_refresh, verbose, maxredirs)
+            else:
+               raise OverflowError("Maximum amount of redirects (%s) reached." % maxredirs)
+
+        return self.visited
+
+    def print_results(self, visited):
+        for datapair in visited:
+            data, url, target = datapair
+            reason = data.reason or "Unknown Status Code"
+            if target:
+                print("%s %s: %s => %s" % (data.status, reason, url, target))
+            else:
+                print("%s %s: %s" % (data.status, reason, url))
+
+if __name__ == "__main__":
     ### Handle arguments nicely using argparse
     import argparse
+
     def _positivefloat(value):
         ivalue = float(value)
         if ivalue <= 0:
              raise argparse.ArgumentTypeError("%s is an invalid positive float value." % value)
         return ivalue
+
     parser = argparse.ArgumentParser(description='Shows HTTP Status codes and HTTP redirect paths..')
     parser.add_argument('url', help='the address to attempt to access, in the form "web.host:port"')
     parser.add_argument("-v", "--verbose", help="show the entire HTTP headers list", action='store_true')
     parser.add_argument("-R", "--disable-meta-refresh", help="disable experimental checking for meta refresh tags", action='store_true')
     parser.add_argument("-S", "--ssl", help="use HTTPS to connect to the server", action='store_true')
-    parser.add_argument("-n", "--ignore-loops", help="don't detect redirect loops", action='store_true')
     parser.add_argument("-m", "--max-redirects", metavar="maxredirs", help="defines the maximum amount of redirects this script will follow", type=int, default=10)
     parser.add_argument("-t", "--timeout", metavar="timeout", help="sets the timeout for accessing a site", type=_positivefloat, default=4.0)
     args = parser.parse_args()
 
-    t = args.timeout
-    maxredirs = args.max_redirects
-    ignoreloops = args.ignore_loops
-    
     parser = redirectParser()
     try:
-        parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects, args.ignore_loops)
+        links = parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects)
+        parser.print_results(links)
     except KeyboardInterrupt:
         print('Exiting on Ctrl-C.')
