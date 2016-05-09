@@ -37,6 +37,7 @@ class metarefreshParser(HTMLParser):
         if n == 0: return "instant"
         if n == 1: return "after 1 second"
         return "after {} seconds".format(n)
+
 class redirectParser():
     def __init__(self):
         self.nredirs = 0
@@ -54,8 +55,10 @@ class redirectParser():
         try:
             addr = addr.split("/", 1) # Split links in half (as in "site.web/index.htm")
         except IndexError: pass
+        assert not url.startswith(('/', '\\')) # Trying to lookup / will freeze the app...
         if ssl or url.lower().startswith("https"):
             h1 = httplib.HTTPSConnection(addr[0], timeout=t)
+            ssl = True
         else:
             h1 = httplib.HTTPConnection(addr[0], timeout=t)
         try:
@@ -67,7 +70,6 @@ class redirectParser():
         h1.endheaders()
         r1 = h1.getresponse()
         reason = (r1.reason or "(Unknown)") + ":"
-        print(r1.status, reason, url)
         if r1.status == 200 and not disable_meta_refresh:
             metaparse = metarefreshParser()
             metaparse.feed(r1.read().decode("utf-8", "replace"))
@@ -75,8 +77,22 @@ class redirectParser():
             L = r1.getheader('location') 
         if verbose:
             headers = r1.getheaders()
+            print('\nHeader data for {}:\n'.format(url))
             for n in headers:
-                print("{}: {} / Target: {}".format(n[0], n[1], metatarget or L))
+                print("{}: {}".format(n[0], n[1]))
+            print()
+        if 'http://' not in url and 'https://' not in url:
+            # This fixes urljoin() returning just '/' when the initial query didn't have a schame
+            # e.g. urljoin('github.com', '/') => '/'
+            if ssl:
+                url = 'https://' + url
+            else:
+                url = 'http://' + url
+        real_L = urljoin(url, L)
+        if r1.status in (301, 302):
+            print(r1.status, reason, url, '=>', real_L)
+        else:
+            print(r1.status, reason, url)
         if L:
             if L in self.locations and not ignoreloops:
                 raise ValueError("Redirect loop detected, aborting! (run with -n argument to ignore this)")
@@ -84,7 +100,7 @@ class redirectParser():
             if self.nredirs < maxredirs:
                 self.nredirs += 1
                 self.locations.append(L)
-                return self.parse(urljoin(url, L), timeout, ssl, disable_meta_refresh, verbose, maxredirs, ignoreloops)
+                return self.parse(real_L, timeout, ssl, disable_meta_refresh, verbose, maxredirs, ignoreloops)
             else:
                raise OverflowError("Maximum amount of redirects ({}) reached. Try running the script with a higher -m limit!".format(maxredirs))
 

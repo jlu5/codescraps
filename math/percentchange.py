@@ -35,7 +35,6 @@ def percentChange(a, b):
     Find the percentage change between <a> and <b>."""
     return ((b - a) / a) * 100
 
-
 if __name__ == "__main__":
     root = Tk()
     root.title("Percentage Change Calculator")
@@ -55,24 +54,30 @@ if __name__ == "__main__":
         env1.set(b)
         env2.set(a)
 
+    desc1 = Label(root, text="Initial value", justify=CENTER)
+    desc2 = Label(root, text="Final value", justify=CENTER)
+    desc1.grid(column=0, row=0, padx=5, pady=5, sticky=(N))
+    desc2.grid(column=1, row=0, padx=5, pady=5, sticky=(N))
+    
     entry1 = Entry(root, width=20, justify=CENTER, textvariable=env1)
-    entry1.grid(column=0, row=0, padx=5, pady=5, sticky=(N))
+    entry1.grid(column=0, row=1, padx=5, pady=5, sticky=(N))
+    
     entry2 = Entry(root, width=20, justify=CENTER, textvariable=env2)
-    entry2.grid(column=1, row=0, padx=5, pady=5, sticky=(N))
+    entry2.grid(column=1, row=1, padx=5, pady=5, sticky=(N))
     out_display = Label(root, textvariable=out, wraplength=500,
                         justify=CENTER)
-    out_display.grid(column=0, row=1, columnspan=2, padx=5, pady=5, sticky=(N))
+    out_display.grid(column=0, row=2, columnspan=2, padx=5, pady=5, sticky=(N))
 
     rb = Button(root, text="Calculate", command=_wrap_percentChange)
-    rb.grid(row=2, padx=5, pady=5, column=0, sticky=(S))
+    rb.grid(row=3, padx=5, pady=5, column=0, sticky=(S))
     cb = Button(root, text="Swap", command=_swap)
-    cb.grid(row=2, padx=5, pady=5, column=1, sticky=(S))
+    cb.grid(row=3, padx=5, pady=5, column=1, sticky=(S))
 
     root.bind('<Return>', _wrap_percentChange)
     root.bind('<Escape>', sysexit)
 
     # Make the window widgets resize automatically
-    for x in range(2):
+    for x in range(3):
         root.columnconfigure(x, weight=1)
         root.rowconfigure(x, weight=1)
     entry1.focus()
