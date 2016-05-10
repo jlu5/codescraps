@@ -41,11 +41,7 @@ class redirectParser():
             http = httplib.HTTPConnection(site, timeout=timeout)
 
         # Send a GET request to the desired address.
-        try:
-            http.putrequest("GET", "/"+addr.path)
-        except IndexError:
-            # addr[1] may be empty if we're requesting a root domain (e.g. "github.com").
-            http.putrequest("GET", "/")
+        http.putrequest("GET", addr.path)
 
         # This header is needed for some reason; otherwise you get a HTTP 400 on some servers.
         http.putheader("Accept", "*/*")
