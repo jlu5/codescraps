@@ -82,6 +82,7 @@ class redirectParser():
             if not parsed_target.netloc:
                 target = urljoin(url, target)
 
+        logging.debug("%s %s: %s => %s" % (data.status, data.reason, url, target))
         self.visited.append((data, url, target))
 
         if target:
@@ -126,8 +127,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     parser = redirectParser()
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
     try:
-        links = parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.verbose, args.max_redirects)
+        links = parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.max_redirects)
         parser.print_results(links)
     except KeyboardInterrupt:
         print('Exiting on Ctrl-C.')
