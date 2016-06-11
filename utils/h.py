@@ -1,18 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function, unicode_literals
 
 import sys
 import socket
 from time import sleep
 import logging
-try:
-    import httplib
-    from HTMLParser import HTMLParser
-    from urlparse import urljoin, urlparse
-except ImportError:
-    import http.client as httplib
-    from urllib.parse import urljoin, urlparse
-    from html.parser import HTMLParser as HTMLParser
+import http.client
+from urllib.parse import urljoin, urlparse
+from ssl import _create_unverified_context
 
 try:
     from bs4 import BeautifulSoup
@@ -25,30 +20,39 @@ class redirectParser():
         self.nredirs = 0
         self.visited = []  # Store list of URLs passed through
 
-    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, verbose=False, maxredirs=10):
+    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, max_redirs=10, no_check_certificates=False):
         """Recursively looks up HTTP and meta refresh redirects."""
-        assert not url.startswith(('/', '\\')) # Trying to lookup "/" will freeze the app?!
+        # Trying to lookup "/" will freeze the app?!
+        assert not url.startswith(('/', '\\')), "Invalid URL %r" % url
 
         addr = urlparse(url)
         target = ''
         site = addr.netloc.encode('idna').decode()
-        assert site, "Invalid URL %s" % url
+        assert site, "Invalid URL %s (include the http(s):// portion!)" % url
 
         # Implicitly enable SSL on https:// links, if not already.
         if ssl or addr.scheme == 'https':
-            http = httplib.HTTPSConnection(site, timeout=timeout)
+            ssl = True
+            context = None
+
+            # If certificate checking is disabled, skip both the certificate verification and the hostname checks.
+            if no_check_certificates:
+                context = _create_unverified_context()
+                context.check_hostname = False
+            httpconn = http.client.HTTPSConnection(site, timeout=timeout, context=context)
+
         else:
-            http = httplib.HTTPConnection(site, timeout=timeout)
+            httpconn = http.client.HTTPConnection(site, timeout=timeout)
 
         # Send a GET request to the desired address.
-        http.putrequest("GET", addr.path)
+        httpconn.putrequest("GET", addr.path)
 
         # This header is needed for some reason; otherwise you get a HTTP 400 on some servers.
-        http.putheader("Accept", "*/*")
-        http.endheaders()
+        httpconn.putheader("Accept", "*/*")
+        httpconn.endheaders()
 
         # Fetch the response from the GET request.
-        data = http.getresponse()
+        data = httpconn.getresponse()
 
         if data.status == 200 and BeautifulSoup and not disable_meta_refresh:
             # If the code was a 200 OK, parse meta refresh links if enabled.
@@ -78,19 +82,21 @@ class redirectParser():
             if not parsed_target.netloc:
                 target = urljoin(url, target)
 
-        logging.debug("%s %s: %s => %s" % (data.status, data.reason, url, target))
+        logging.debug("%s %s: %s => %s (SSL=%s)" % (data.status, data.reason, url, target, ssl))
         self.visited.append((data, url, target))
 
         if target:
-            if self.nredirs < maxredirs:
+            if self.nredirs < max_redirs:
                 self.nredirs += 1
                 # Sleep to avoid chewing all the CPU
                 sleep(0.1)
 
                 # Recursively lookup redirects for the target URL.
-                return self.parse(target, timeout, ssl, disable_meta_refresh, verbose, maxredirs)
+                # XXX: Make this not duplicate the the entire list of original arguments.
+                return self.parse(target, timeout, ssl=ssl, disable_meta_refresh=disable_meta_refresh,
+                                  max_redirs=max_redirs, no_check_certificates=no_check_certificates)
             else:
-               raise OverflowError("Maximum amount of redirects (%s) reached." % maxredirs)
+               raise OverflowError("Maximum amount of redirects (%s) reached." % max_redirs)
 
         return self.visited
 
@@ -113,13 +119,14 @@ if __name__ == "__main__":
              raise argparse.ArgumentTypeError("%s is an invalid positive float value." % value)
         return ivalue
 
-    parser = argparse.ArgumentParser(description='Shows HTTP Status codes and HTTP redirect paths..')
-    parser.add_argument('url', help='the address to attempt to access, in the form "web.host:port"')
-    parser.add_argument("-v", "--verbose", help="show the entire HTTP headers list", action='store_true')
-    parser.add_argument("-R", "--disable-meta-refresh", help="disable experimental checking for meta refresh tags", action='store_true')
+    parser = argparse.ArgumentParser(description='Recursively finds for HTTP and meta refresh redirects.')
+    parser.add_argument('url', help='the address to access, in the form "web.host:port"')
+    parser.add_argument("-v", "--verbose", help="verbose mode, shows the entire HTTP headers list", action='store_true')
+    parser.add_argument("-R", "--disable-meta-refresh", help="disable checks for meta refresh tags", action='store_true')
     parser.add_argument("-S", "--ssl", help="use HTTPS to connect to the server", action='store_true')
-    parser.add_argument("-m", "--max-redirects", metavar="maxredirs", help="defines the maximum amount of redirects this script will follow", type=int, default=10)
+    parser.add_argument("-m", "--max-redirects", metavar="max_redirs", help="defines the maximum amount of redirects this script will follow", type=int, default=10)
     parser.add_argument("-t", "--timeout", metavar="timeout", help="sets the timeout for accessing a site", type=_positivefloat, default=4.0)
+    parser.add_argument("-nc", "--no-check-certificates", help="skips certificate checking for SSL links", action='store_true')
     args = parser.parse_args()
 
     parser = redirectParser()
@@ -128,7 +135,7 @@ if __name__ == "__main__":
         logging.getLogger().setLevel(logging.DEBUG)
 
     try:
-        links = parser.parse(args.url, args.timeout, args.ssl, args.disable_meta_refresh, args.max_redirects)
+        links = parser.parse(args.url, args.timeout, ssl=args.ssl, disable_meta_refresh=args.disable_meta_refresh, max_redirs=args.max_redirects, no_check_certificates=args.no_check_certificates)
         parser.print_results(links)
     except KeyboardInterrupt:
         print('Exiting on Ctrl-C.')
