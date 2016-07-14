@@ -7,13 +7,15 @@ import datetime
 import os
 import re
 from sys import argv
+import glob
 
 yesterday = datetime.datetime.now() - datetime.timedelta(days = 1)
 if len(argv) >= 2:
     filelist = argv[1:]
 else:
-    filelist = ['/home/gl/pisglog/ovd_#chat_%s.log' % \
-        s.strftime('%Y%m%d') for s in (datetime.datetime.now(), yesterday)]
+    filelist = glob.glob('/home/gl/pisglog/ovd_#*_%s.log' % datetime.datetime.now().strftime('%Y%m%d'))
+    filelist += glob.glob('/home/gl/pisglog/ovd_#*_%s.log' % yesterday.strftime('%Y%m%d'))
+
 outfile_dir = '/home/gl/pisglog'
 outfile_prefix = ''
 outfile_suffix = '.conv'
@@ -29,6 +31,7 @@ convnick = re.compile(r"<.+?> \x02?\[.+?\]\x02? [@%+]?-?(?:\x03|\d)*-?(.*?)\x03?
 convkick = re.compile(r"<.+?> \x02?\[.+?\]\x02? [@%+]?-?(?:\x03|\d)*-?(.*?)\x03? \(.*?\) has been kicked from .*? by (.*?) \((.*?)\)", re.IGNORECASE)
 # PISG doesn't like slashes in nicks. Clobber them.
 convslash = re.compile(r"<(.*?)\/(.*?)>", re.IGNORECASE)
+convslashme = re.compile(r"\* (.*?)\/(.*?) (.*)", re.IGNORECASE)
 
 def _conv(infile):
     inread = open(infile)
@@ -45,6 +48,7 @@ def _conv(infile):
         line = convkick.sub(r"*** \1 was kicked by \2 (\3)", line)
         line = convme.sub(r"* \1", line)
         line = convslash.sub(r"<\1>", line)
+        line = convslashme.sub(r"* \1 \3", line)
         outfile.write(line)
     inread.close()
     outfile.close()
