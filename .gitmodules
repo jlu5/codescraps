@@ -1,0 +1,3 @@
+[submodule "games/trulyamazed"]
+	path = games/trulyamazed
+	url = https://github.com/glolol/trulyamazed
