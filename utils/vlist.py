@@ -1,16 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ### BEGIN CONFIGURATION ###
 arch = "i386,amd64,source,all"
 ### END CONFIGURATION ###
 
 import json
 from collections import OrderedDict
-try:
-    from urllib.request import urlopen
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
-    from urllib2 import urlopen
+from urllib.request import urlopen
+from urllib.parse import urlencode
 
 # A reimplementation of the 'rmadison' utility from Debian's devscripts,
 # this fetches package information from Debian and Ubuntu's repositories
@@ -28,29 +24,15 @@ def madison(pkg, dist, codenames='', suite=''):
         d[L[2].strip()] = (L[1].strip(),L[3].strip())
     return d
 
-def archaur(pkg):
-    pkg = pkg.lower()
-    baseurl = 'https://aur.archlinux.org/rpc.php?type=info&'
-    fd = urlopen(baseurl + urlencode({'arg':sys.argv[1]}))
-    data = json.load(fd)
-    try:
-        return data['results'][0]
-    except IndexError:
-        return
-
 if __name__ == "__main__":
     import sys
     from os.path import basename
     try:
         d = madison(sys.argv[1], 'all')
     except IndexError:
-        print("Need package name as argument! Usage: %s <packagename>" % 
+        print("Need package name as argument! Usage: %s <packagename>" %
             basename(__file__))
         sys.exit(1)
     else:
         for (k, v) in d.items():
             print("{} ({} [{}])".format(k,v[0],v[1]))
-    aurs = archaur(sys.argv[1])
-    if aurs:
-        print("Arch Linux AUR ({}): [ID:{} Votes:{}]".format(aurs["Version"], 
-            aurs['ID'], aurs['NumVotes']))
