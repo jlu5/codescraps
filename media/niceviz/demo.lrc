@@ -1,0 +1,5 @@
+[00:00.00]Hello there.
+[00:01.48]Niceviz is an audio player with simple synchronized lyrics display.
+[00:06.12]It uses the LRC format for displaying lyrics,
+[00:09.40]and supports reading from MP3, WAV, and others via the Minim
+[00:13.74]audio library.
