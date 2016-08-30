@@ -1,1 +1,1 @@
-HTML/JS/CSS scripts and demonstrations. Hosted over at https://overdrivenetworks.com/pages/
+Mostly useless pages in HTML, JS, and/or CSS. Hosted over at https://overdrivenetworks.com/pages/

@@ -1,12 +1,17 @@
-Just random things.&trade;
+Random games and scripts for amusement purposes.
 
-##### hilo.(py|lua)
-- Plays a game of HiLo.
+## Highlights
 
-##### luck.py
-- Cycles through a random number generator to see how lucky you are! One of my earlier tests.
+##### trulyamazed/
+- Procedurally generated maze game in PyQt5.
 
-##### namegen.py
+##### tictac/
+- Command line Tic-Tac-Toe / Gomoku with arbitrary board size.
+
+##### overgrowth/
+- Search for the gold, not the foliage. A simple 2D game in Processing 3.
+
+##### namegen/namegen.py
 - Random name generator. Usage: `python namegen.py <number of names>`
 ```bash
 $ python namegen.py 5
@@ -15,32 +20,6 @@ Barimeseneiel
 Corantastar
 Houlreth
 Estasty
-```
-
-##### pyramid.py
-- Creates pyramid text. Why not, right?
-- Example output:
-```bash
-$ python pyramid.py hello
-h
-he
-hel
-hell
-hello
-hell
-hel
-he
-h
-```
-
-##### randomchannels.py
-- Creates a list of IRC-style channels. Useful if you have `SAJOIN` access and someone's ticking you off. ;)
-```
-Usage: randomchannels.py <length> <amount>
-
-arguments:
-  length        The length of each channel name to be generated.
-  amount        The amount of names to generate.
 ```
 
 ##### randomjunk.py ~~the most useless thing ever~~

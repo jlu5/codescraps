@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import random, string, sys
 from os.path import basename
 
@@ -12,11 +12,11 @@ def gen(length=10, amount=5, type="all"):
             raise ValueError("Value for length or amount too not in range (1-100)")
     L = ",".join("#"+("".join((random.choice(type)) for _ in xrange(length))) for _ in xrange(amount))
     return L
-    
+
 def _usage():
     print("Usage: {} <length> <amount>\n\narguments: \n  length        The length of each channel name to be generated. \n  amount        The amount of names to generate.".format(basename(__file__)))
     sys.exit()
-    
+
 def _main():
     if len(sys.argv) > 3:
         _usage()
@@ -28,6 +28,6 @@ def _main():
         _usage()
     else:
         print(gen(length, amount))
-    
+
 if __name__ == "__main__":
     _main()

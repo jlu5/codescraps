@@ -8,6 +8,3 @@ A collection of small utilities/scripts.
 
 ##### passwd.py
 - Random password generator.
-
-##### vlist.py
-- A script to fetch package information from Debian and Ubuntu repositories. Essentially a reimplementation of the `rmadison` utility available in Debian's devscripts.
