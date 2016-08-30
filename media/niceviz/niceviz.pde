@@ -195,7 +195,8 @@ void draw() {
         // Song file is invalid; make that clear to the user.
 
         fill(0);
-        text("Invalid song file:\n" + song_file, width/2, height/2);
+        textSize(int(height/24));
+        text("Invalid song file:\n" + song_file, 0, 0, width, height);
 
     // Save CPU by only drawing the screen if we're playing a song
     } else if (player.isPlaying()) {
@@ -296,7 +297,7 @@ void draw() {
             if (shown_lines != null) {
                 // Join all the lyrics lines to show with a newline between each one.
                 // Display this text in the centre of the window.
-                text(String.join("\n", shown_lines), width/2, height/2);
+                text(String.join("\n", shown_lines), 0, 0, width, height);
             }
             text("Left click to toggle text, right click to pause/play.", width/2, height*0.9);
         }
