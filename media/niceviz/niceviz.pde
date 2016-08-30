@@ -289,18 +289,6 @@ void draw() {
         fill(255, 100); // Higher opacity for the white area
         rect(width, min(height, height*rectsize*3), 0, height);
 
-        // Draw some buttons for choosing files
-        fill(200);
-        stroke(128);
-        strokeWeight(3); // Use a hicker button outline
-        choose_file_coords = new float[]{width*0.85, height*0.02, width*0.99, height*0.1};
-        rect(width*0.85, height*0.02, width*0.99, height*0.1);
-        fill(1);
-
-        textSize(int(height/32));
-        text("Choose File", width*0.92, height*0.06);
-
-        // Reset text size back to the bigger version
         fill(0);
         textSize(int(height/24));
 
@@ -313,6 +301,17 @@ void draw() {
             text("Left click to toggle text, right click to pause/play.", width/2, height*0.9);
         }
     }
+
+    // Draw a button for choosing files
+    fill(200);
+    stroke(128);
+    strokeWeight(3); // Use a thicker button outline
+    choose_file_coords = new float[]{width*0.85, height*0.02, width*0.99, height*0.1};
+    rect(width*0.85, height*0.02, width*0.99, height*0.1);
+    fill(1);
+
+    textSize(int(height/32));
+    text("Choose File", width*0.92, height*0.06);
 }
 
 void fileSelected(File selection) {
