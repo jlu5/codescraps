@@ -4,10 +4,15 @@ Fetches a newline-separated list of audio links from a file, and downloads them 
 
 If no arguments are given, this program will try to fetch files from dlthis.txt, in the folder where the script was executed.
 """
+from __future__ import print_function
 
 import argparse
 import youtube_dl
 import sys
+
+if sys.version_info[0] < 3:
+	# Use io.open() on Python 2 for encoding support.
+	from io import open
 
 ydl_opts = {
     # Fetch only audio
