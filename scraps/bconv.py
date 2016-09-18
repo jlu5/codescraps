@@ -39,6 +39,7 @@ def _conv(infile):
     outfilename = '%s%s%s' % (outfile_prefix, infile, outfile_suffix)
     outfile = open(outfilename, 'w')
     for line in inread:
+        line = line.replace("\u200b", "")
         line = convmsg.sub(r"<\1>", line)
         line = convmode.sub(r"*** \1 sets mode: \2", line)
         line = convjoin.sub(r"*** Joins: \1 (\2)", line)
