@@ -25,3 +25,6 @@ Estasty
 ##### randomjunk.py ~~the most useless thing ever~~
 - Literally generates a pile of random junk in your terminal. Optionally adds colours if the colorama module is installed.
 - `python randomjunk.py -h` for a list of supported arguments.
+
+##### strwreck.py
+- Reads a file or text from the command line, displaying a scrambled version to the screen.
