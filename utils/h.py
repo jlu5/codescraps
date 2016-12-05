@@ -17,11 +17,16 @@ except ImportError:
     BeautifulSoup = None
 
 class redirectParser():
-    def __init__(self):
+    def __init__(self, enforce_ssl=False, disable_meta_refresh=False, max_redirs=10, no_check_certificates=False):
         self.nredirs = 0
         self.visited = []  # Store list of URLs passed through
 
-    def parse(self, url, timeout, ssl=False, disable_meta_refresh=False, max_redirs=10, no_check_certificates=False):
+        self.enforce_ssl = enforce_ssl
+        self.disable_meta_refresh = disable_meta_refresh
+        self.max_redirs = max_redirs
+        self.no_check_certificates = no_check_certificates
+
+    def parse(self, url, timeout=4.0):
         """Recursively looks up HTTP and meta refresh redirects."""
         # Trying to lookup "/" will freeze the app?!
         assert not url.startswith(('/', '\\')), "Invalid URL %r" % url
@@ -32,12 +37,12 @@ class redirectParser():
         assert site, "Invalid URL %s (include the http(s):// portion!)" % url
 
         # Implicitly enable SSL on https:// links, if not already.
-        if ssl or addr.scheme == 'https':
-            ssl = True
+        ssl = self.enforce_ssl or addr.scheme == 'https'
+        if ssl:
             context = None
 
             # If certificate checking is disabled, skip both the certificate verification and the hostname checks.
-            if no_check_certificates:
+            if self.no_check_certificates:
                 context = _create_unverified_context()
                 context.check_hostname = False
             httpconn = http.client.HTTPSConnection(site, timeout=timeout, context=context)
@@ -61,7 +66,7 @@ class redirectParser():
         data = httpconn.getresponse()
         logging.debug('HTTP headers for %s: %s', fullpath, pprint.pprint(data.getheaders()))
 
-        if data.status == 200 and BeautifulSoup and not disable_meta_refresh:
+        if data.status == 200 and BeautifulSoup and not self.disable_meta_refresh:
             # If the code was a 200 OK, parse meta refresh links if enabled.
             html = BeautifulSoup(data.read(), "html.parser")
             for tag in html.find_all('meta'):
@@ -93,15 +98,13 @@ class redirectParser():
         self.visited.append((data, url, target))
 
         if target:
-            if self.nredirs < max_redirs:
+            if self.nredirs < self.max_redirs:
                 self.nredirs += 1
                 # Sleep to avoid chewing all the CPU
                 sleep(0.1)
 
                 # Recursively lookup redirects for the target URL.
-                # XXX: Make this not duplicate the the entire list of original arguments.
-                return self.parse(target, timeout, ssl=ssl, disable_meta_refresh=disable_meta_refresh,
-                                  max_redirs=max_redirs, no_check_certificates=no_check_certificates)
+                return self.parse(target, timeout)
             else:
                raise OverflowError("Maximum amount of redirects (%s) reached." % max_redirs)
 
@@ -136,13 +139,13 @@ if __name__ == "__main__":
     parser.add_argument("-nc", "--no-check-certificates", help="skips certificate checking for SSL links", action='store_true')
     args = parser.parse_args()
 
-    parser = redirectParser()
+    parser = redirectParser(args.ssl, args.disable_meta_refresh, args.max_redirects, args.no_check_certificates)
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
     try:
-        links = parser.parse(args.url, args.timeout, ssl=args.ssl, disable_meta_refresh=args.disable_meta_refresh, max_redirs=args.max_redirects, no_check_certificates=args.no_check_certificates)
+        links = parser.parse(args.url, args.timeout)
         parser.print_results(links)
     except KeyboardInterrupt:
         print('Exiting on Ctrl-C.')
