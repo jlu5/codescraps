@@ -64,7 +64,7 @@ class redirectParser():
 
         # Fetch the response from the GET request.
         data = httpconn.getresponse()
-        logging.debug('HTTP headers for %s: %s', fullpath, pprint.pprint(data.getheaders()))
+        logging.debug('HTTP headers for %s: %s', url, pprint.pformat(data.getheaders()))
 
         if data.status == 200 and BeautifulSoup and not self.disable_meta_refresh:
             # If the code was a 200 OK, parse meta refresh links if enabled.
@@ -94,7 +94,7 @@ class redirectParser():
             if not parsed_target.netloc:
                 target = urljoin(url, target)
 
-        logging.debug("%s %s: %s => %s (SSL=%s)" % (data.status, data.reason, url, target, ssl))
+        logging.debug("%s %s %s: %s (SSL=%s)" % (url, data.status, data.reason, target, ssl))
         self.visited.append((data, url, target))
 
         if target:
