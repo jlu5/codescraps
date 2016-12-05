@@ -8,6 +8,7 @@ import logging
 import http.client
 from urllib.parse import urljoin, urlparse
 from ssl import _create_unverified_context
+import pprint
 
 try:
     from bs4 import BeautifulSoup
@@ -59,6 +60,7 @@ class redirectParser():
 
         # Fetch the response from the GET request.
         data = httpconn.getresponse()
+        logging.debug('HTTP headers for %s: %s', fullpath, pprint.pprint(data.getheaders()))
 
         if data.status == 200 and BeautifulSoup and not disable_meta_refresh:
             # If the code was a 200 OK, parse meta refresh links if enabled.
