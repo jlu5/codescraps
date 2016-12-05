@@ -25,7 +25,8 @@ class redirectParser():
         # Trying to lookup "/" will freeze the app?!
         assert not url.startswith(('/', '\\')), "Invalid URL %r" % url
 
-        addr = urlparse(url)
+        # Don't break apart URL fragments (e.g. ?blah=value). Instead, keep them as part of the apth
+        addr = urlparse(url, allow_fragments=False)
         target = ''
         site = addr.netloc.encode('idna').decode()
         assert site, "Invalid URL %s (include the http(s):// portion!)" % url
@@ -44,8 +45,13 @@ class redirectParser():
         else:
             httpconn = http.client.HTTPConnection(site, timeout=timeout)
 
+        # Preserve query section (e.g. "?abc=def" of //some.site/page.php?abc=def) if applicable.
+        fullpath = addr.path
+        if addr.query:
+            fullpath += '?%s' % addr.query
+
         # Send a GET request to the desired address.
-        httpconn.putrequest("GET", addr.path)
+        httpconn.putrequest("GET", fullpath)
 
         # This header is needed for some reason; otherwise you get a HTTP 400 on some servers.
         httpconn.putheader("Accept", "*/*")
@@ -78,7 +84,7 @@ class redirectParser():
         # The resulting target was a relative link. Format this appropriately by joining the target
         # with the requested URL.
         if target:
-            parsed_target = urlparse(target)
+            parsed_target = urlparse(target, allow_fragments=False)
             if not parsed_target.netloc:
                 target = urljoin(url, target)
 
