@@ -26,7 +26,6 @@ class redirectParser():
         # Trying to lookup "/" will freeze the app?!
         assert not url.startswith(('/', '\\')), "Invalid URL %r" % url
 
-        # Don't break apart URL fragments (e.g. ?blah=value). Instead, keep them as part of the apth
         addr = urlparse(url, allow_fragments=False)
         target = ''
         site = addr.netloc.encode('idna').decode()
