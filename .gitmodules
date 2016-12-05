@@ -1,3 +1,6 @@
 [submodule "games/trulyamazed"]
 	path = games/trulyamazed
 	url = https://github.com/glolol/trulyamazed
+[submodule "utils/FileInsight"]
+	path = utils/FileInsight
+	url = https://github.com/GLolol/FileInsight
