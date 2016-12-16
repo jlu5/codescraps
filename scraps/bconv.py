@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 """bconv.py - Script to parse relayer text in chatlogs, making them available to stats generators like PISG."""
 
 ### Configuration ###

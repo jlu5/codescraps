@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import random
 # Responses taken from http://en.wikipedia.org/wiki/Magic_8_ball#Possible_answers
 responses = ['It is certain.', 'It is decidedly so.', 'Without a doubt.',
@@ -15,6 +15,6 @@ def eightball(question=''):
     
 if __name__ == "__main__": # If not an import:
     import sys
-    if len(sys.argv) <=1: # This is just to add a touch of realism
-        raw_input("Think of a question, and let the magic 8-ball find the answer:\n\n")
-    print random.choice(responses) # The Magic of randomness!
+    if len(sys.argv) <= 1:
+        input("Think of a question, and let the magic 8-ball find the answer:\n\n")
+    print(random.choice(responses)) # The Magic of randomness!
