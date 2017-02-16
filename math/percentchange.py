@@ -35,16 +35,24 @@ def percentChange(a, b):
     Find the percentage change between <a> and <b>."""
     return ((b - a) / a) * 100
 
+def midpointPercentChange(a, b):
+    """<a> <b>
+
+    Find the percentage change between <a> and <b>, using the midpoint method."""
+    avg = 0.5 * (a + b)
+    return ((b - a) / avg) * 100
+
 if __name__ == "__main__":
     root = Tk()
     root.title("Percentage Change Calculator")
 
     out, env1, env2 = [StringVar() for _ in range(3)]
+    use_midpoint = IntVar()
 
     def _wrap_percentChange(*args):
         try:
             a, b = map(float, (env1.get(), env2.get()))
-            s = percentChange(a, b)
+            s = midpointPercentChange(a, b) if use_midpoint.get() else percentChange(a, b)
             out.set("%s%%" % s)
         except ZeroDivisionError:
             out.set("Initial value cannot be zero!")
@@ -75,11 +83,14 @@ if __name__ == "__main__":
     cb = Button(root, text="Swap", command=_swap)
     cb.grid(row=3, padx=5, pady=5, column=1, sticky=(S))
 
+    use_midpoint_btn = Checkbutton(root, text="Use midpoint method (economics)", variable=use_midpoint)
+    use_midpoint_btn.grid(row=4, padx=5, pady=5, column=0, columnspan=2, sticky=(S))
+
     root.bind('<Return>', _wrap_percentChange)
     root.bind('<Escape>', sysexit)
 
     # Make the window widgets resize automatically
-    for x in range(3):
+    for x in range(4):
         root.columnconfigure(x, weight=1)
         root.rowconfigure(x, weight=1)
     entry1.focus()
