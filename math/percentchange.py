@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # The MIT License (MIT)
 
-# Copyright (c) 2015 James Lu
+# Copyright (c) 2015,2017 James Lu
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ from sys import exit as sysexit
 
 def percentChange(a, b):
     """<a> <b>
-    
+
     Find the percentage change between <a> and <b>."""
     return ((b - a) / a) * 100
 
@@ -46,7 +46,9 @@ if __name__ == "__main__":
             a, b = map(float, (env1.get(), env2.get()))
             s = percentChange(a, b)
             out.set("%s%%" % s)
-        except ValueError as e:
+        except ZeroDivisionError:
+            out.set("Initial value cannot be zero!")
+        except (ValueError, ArithmeticError) as e:
             out.set("Error: %s" % e)
 
     def _swap(*args):
@@ -58,10 +60,10 @@ if __name__ == "__main__":
     desc2 = Label(root, text="Final value", justify=CENTER)
     desc1.grid(column=0, row=0, padx=5, pady=5, sticky=(N))
     desc2.grid(column=1, row=0, padx=5, pady=5, sticky=(N))
-    
+
     entry1 = Entry(root, width=20, justify=CENTER, textvariable=env1)
     entry1.grid(column=0, row=1, padx=5, pady=5, sticky=(N))
-    
+
     entry2 = Entry(root, width=20, justify=CENTER, textvariable=env2)
     entry2.grid(column=1, row=1, padx=5, pady=5, sticky=(N))
     out_display = Label(root, textvariable=out, wraplength=500,
