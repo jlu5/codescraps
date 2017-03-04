@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 
 TARGET_STRING = 'QUACK'
 MIN_TIME = 0.2
