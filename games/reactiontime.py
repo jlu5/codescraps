@@ -48,7 +48,8 @@ def wait():
 
         popup_inactive.wait()
 
-t = threading.Thread(target=wait, daemon=True)
+t = threading.Thread(target=wait)
+t.daemon = True
 t.start()
 
 while True:
