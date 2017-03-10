@@ -106,7 +106,7 @@ class redirectParser():
                 # Recursively lookup redirects for the target URL.
                 return self.parse(target, timeout)
             else:
-               raise OverflowError("Maximum amount of redirects (%s) reached." % max_redirs)
+               raise OverflowError("Maximum amount of redirects (%s) reached." % self.max_redirs)
 
         return self.visited
 
