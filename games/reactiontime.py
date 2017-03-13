@@ -1,19 +1,37 @@
 #!/usr/bin/env python
 from __future__ import print_function
-
-TARGET_STRING = 'QUACK'
-MIN_TIME = 0.2
-MAX_TIME = 3
-
+from RPi import GPIO
 import time
 import sys
 import random
 import threading
 
+#TARGET_STRING = 'QUACK'
+MIN_TIME = 0.2
+MAX_TIME = 3
+
+TARGET_PIN = 21
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(TARGET_PIN, GPIO.OUT)
+
+ison = False
+
+def led(state=None):
+    global ison
+    if state is not None:
+        ison = state
+    else:
+        ison = not ison
+    GPIO.output(TARGET_PIN, GPIO.HIGH if ison else GPIO.LOW)
+
 if sys.version_info[0] <= 2:  # Python 2 support
     input = raw_input
 
-print('Instructions: when the string %r shows up, press the Enter key to check your reaction time!' % TARGET_STRING)
+#print('Instructions: when the string %r shows up, press the Enter key to check your reaction time!' % TARGET_STRING)
+print("Instructions: You are an economical engineer who is trying to minimize their energy "
+      "bills by turning off all the lights when they aren't being used. When the light turns on, "
+      "hit enter to turn it back off!")
 print('Press CTRL-C to exit')
 
 # Internal states
@@ -45,7 +63,8 @@ def wait():
 
         popup_time = time.time()
 
-        print(TARGET_STRING)
+        #print(TARGET_STRING)
+        led(True)
 
         popup_inactive.wait()
 
@@ -59,6 +78,7 @@ while True:
     except KeyboardInterrupt:
         # Allow quitting on Ctrl+C
         print_stats()
+        led(False)
         sys.exit()
 
     if popup_inactive.is_set():
@@ -67,6 +87,7 @@ while True:
     else:
         result = time.time() - popup_time
         print('Your reaction time: %f seconds' % result)
+        led(False)
         results.append(result)
 
         popup_inactive.set()
