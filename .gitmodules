@@ -4,6 +4,6 @@
 [submodule "utils/FileInsight"]
 	path = utils/FileInsight
 	url = https://github.com/GLolol/FileInsight
-[submodule "utils/packagelists"]
-	path = utils/packagelists
-	url = https://github.com/utopia-repository/utopia-scripts
+[submodule "utils/packagelists/genchanges"]
+	path = utils/packagelists/genchanges
+	url = https://gist.github.com/GLolol/40388c1ed08bc04c12d7b7be50215dd4
