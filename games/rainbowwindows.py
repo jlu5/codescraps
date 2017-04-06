@@ -29,7 +29,7 @@ class IMMERSIVE_COLOR_PREFERENCES(Structure):
      _fields_ = [('color1', UINT), ('color2', UINT)]
 
 
-# A lot of the functions to get and set color info are unexported functions, but we can access them
+# A lot of the functions to get and set color info are undocumented functions, but we can access them
 # by their ordinal.
 # From the dump at https://theroadtodelphi.com/2011/05/05/changing-the-glass-composition-color-dwm-using-delphi/
 GetColorizationParameters = windll.dwmapi[127]
