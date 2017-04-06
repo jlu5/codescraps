@@ -37,6 +37,7 @@ SetUserColorPreference = windll.uxtheme[122]
 
 # Start off with a HSV value. Although Windows uses RGB internally,
 # it's easier to increment values here and convert them later.
+# XXX: preserve what hue the system is currently at.
 hsv_color = [0.0, 1, 1]
 
 def newColor():
@@ -51,11 +52,17 @@ def newColor():
     print(rgb_color)
 
     # Convert the decimal color space value to one between 0-255.
-    #hexcolor = ['%02x' % int(n) for n in rgb_color]
     hexcolor = [format(int(min(255, round(n*255))), '02x') for n in rgb_color]
+
+    # For Windows 10, the accent color has to be reversed for some reason...
+    # https://github.com/RaMMicHaeL/Windows-10-Color-Control/blob/master/WindowsThemeColorApi.cpp#L54
+    hexcolor_reversed = [format(int(min(255, round(n*255))), '02x') for n in reversed(rgb_color)]
+
+    # TODO: make intensity configurable
     colorstring = '0xEF%s' % ''.join(hexcolor)
-    print(colorstring)
-    return UINT(int(colorstring, base=16))
+    colorstring_reversed = '0xEF%s' % ''.join(hexcolor_reversed)
+    print(colorstring, colorstring_reversed)
+    return (int(colorstring, base=16), int(colorstring_reversed, base=16))
 
 has_composition = c_bool()
 windll.dwmapi.DwmIsCompositionEnabled(byref(has_composition))
@@ -65,7 +72,7 @@ if not has_composition.value:
 
 win_version = sys.getwindowsversion()[0]
 while True:
-    next_color = newColor()
+    next_colors = newColor()
 
     current_params = DWM_COLORIZATION_PARAMS()
     # Get* functions for dwmapi, uxtheme, etc. take a pointer for the function to store its output in
@@ -78,7 +85,7 @@ while True:
 
     # Update the color in our struct and pass it to SetColorizationParameters
     # XXX: find out what the boolean arg actually does?
-    current_params.clrColor = next_color
+    current_params.clrColor = next_colors[0]
     SetColorizationParameters(byref(current_params), byref(c_bool(1)))
 
     # On Windows 10, update the accent color as well
@@ -86,7 +93,7 @@ while True:
         colorpref_params = IMMERSIVE_COLOR_PREFERENCES()
         windll.uxtheme.GetUserColorPreference(byref(colorpref_params), byref(c_bool(0)))
         print('uxtheme colors:', colorpref_params.color1, colorpref_params.color2)
-        colorpref_params.color2 = next_color
+        colorpref_params.color2 = next_colors[1]
         SetUserColorPreference(byref(colorpref_params), byref(c_bool(1)))
 
     time.sleep(DELAY)
