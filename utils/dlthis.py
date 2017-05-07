@@ -14,7 +14,7 @@ if sys.version_info[0] < 3:
 	# Use io.open() on Python 2 for encoding support.
 	from io import open
 
-ydl_opts = {
+YTDL_OPTS = {
     # Fetch only audio
     'format': 'bestaudio/best',
     'ignoreerrors': True,
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.playlist:
-        ydl_opts['outtmpl'] = '%(uploader)s - %(playlist_title)s/%(playlist_index)s %(uploader)s - %(title)s-%(id)s.%(ext)s'
+        YTDL_OPTS['outtmpl'] = '%(playlist_title)s/%(playlist_index)s %(uploader)s - %(title)s-%(id)s.%(ext)s'
     elif args.author:
-        ydl_opts['outtmpl'] = '%(uploader)s - %(title)s-%(id)s.%(ext)s'
+        YTDL_OPTS['outtmpl'] = '%(uploader)s - %(title)s-%(id)s.%(ext)s'
 
     with open(args.textfile, 'r', encoding=args.encoding) as f:
         files = [link.strip() for link in f.readlines()]
         print("Downloading: %s" % files, file=sys.stderr)
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        with youtube_dl.YoutubeDL(YTDL_OPTS) as ydl:
             ydl.download(files)
