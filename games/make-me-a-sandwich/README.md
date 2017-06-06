@@ -2,7 +2,7 @@
 
 ## what is this?
 
-[idk... i had a dream one night and...](https://xkcd.com/149/)
+[idk...](https://xkcd.com/149/)
 
 ## instructions
 
