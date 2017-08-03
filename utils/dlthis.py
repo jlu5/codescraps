@@ -11,8 +11,8 @@ import youtube_dl
 import sys
 
 if sys.version_info[0] < 3:
-	# Use io.open() on Python 2 for encoding support.
-	from io import open
+    # Use io.open() on Python 2 for encoding support.
+    from io import open
 
 YTDL_OPTS = {
     # Fetch only audio
