@@ -31,7 +31,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.playlist:
-        YTDL_OPTS['outtmpl'] = '%(playlist_title)s/%(playlist_index)s %(uploader)s - %(title)s-%(id)s.%(ext)s'
+        if args.author:
+            YTDL_OPTS['outtmpl'] = '%(playlist_title)s/%(playlist_index)s %(uploader)s - %(title)s-%(id)s.%(ext)s'
+        else:
+            YTDL_OPTS['outtmpl'] = '%(playlist_title)s/%(playlist_index)s %(title)s-%(id)s.%(ext)s'
     elif args.author:
         YTDL_OPTS['outtmpl'] = '%(uploader)s - %(title)s-%(id)s.%(ext)s'
 
