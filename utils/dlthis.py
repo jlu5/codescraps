@@ -15,10 +15,30 @@ try:
     import concurrent.futures
 except ImportError:
     concurrent = None
+import humanize
 
 if sys.version_info[0] < 3:
     # Use io.open() on Python 2 for encoding support.
     from io import open
+
+def dlthis_formatter(progress_dict):
+    speed = progress_dict.get('speed')
+    if speed:  # Convert into a human readable string if available
+        speed = humanize.naturalsize(speed) + '/s'
+    else:  # speed = None otherwise
+        speed = 'Speed not available'
+
+    elapsed = progress_dict.get('elapsed', 0)
+    elapsed = '%.02f' % elapsed
+
+    if progress_dict['status'] == 'finished':
+        s = 'Finished downloading %s [took %ss @ %s]' % (progress_dict['filename'], elapsed, speed)
+    elif progress_dict['status'] == 'error':
+        s = 'Error downloading %s [took %ss @ %s]' % (progress_dict['filename'], elapsed, speed)
+    else:
+        s = '[%ss elapsed, ETA: %ss @ %s] %s' % (elapsed, progress_dict['eta'], speed, progress_dict['filename'])
+
+    print('[%s] %s' % (threading.current_thread().name, s))
 
 YTDL_OPTS = {
     # Fetch only audio
@@ -26,6 +46,8 @@ YTDL_OPTS = {
     'ignoreerrors': True,
     # Workaround for SSL certificate verification failing on Windows?!
     'nocheckcertificate': True,
+    'quiet': True,
+    'progress_hooks': [dlthis_formatter],
 }
 
 if __name__ == '__main__':
