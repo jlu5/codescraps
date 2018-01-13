@@ -41,8 +41,6 @@ def dlthis_formatter(progress_dict):
     print('[%s] %s' % (threading.current_thread().name, s))
 
 YTDL_OPTS = {
-    # Fetch only audio
-    'format': 'bestaudio/best',
     'ignoreerrors': True,
     # Workaround for SSL certificate verification failing on Windows?!
     'nocheckcertificate': True,
@@ -56,6 +54,7 @@ if __name__ == '__main__':
     parser.add_argument('--encoding', '-e', nargs='?', help='sets the file encoding', default='utf-8')
     parser.add_argument('--playlist', '-p', action='store_true', help='downloads in playlist mode (output in separate folder, with item number and author in filenames)')
     parser.add_argument('--author', '-a', action='store_true', help='stores author name in output filename')
+    parser.add_argument('--keep-video', '-kv', action='store_true', help='keeps video streams as well as audio')
     parser.add_argument("-j", "--jobs", help="amount of threads to use (requires Python 3, defaults to amount of CPU cores)", type=int, default=os.cpu_count() or 1)
     args = parser.parse_args()
 
@@ -66,6 +65,9 @@ if __name__ == '__main__':
             YTDL_OPTS['outtmpl'] = '%(playlist_title)s/%(playlist_index)s %(title)s-%(id)s.%(ext)s'
     elif args.author:
         YTDL_OPTS['outtmpl'] = '%(uploader)s - %(title)s-%(id)s.%(ext)s'
+
+    if not args.keep_video:
+        YTDL_OPTS['format'] = 'bestaudio/best'
 
     with open(args.textfile, 'r', encoding=args.encoding) as f:
         files = [link.strip() for link in f.readlines()]
