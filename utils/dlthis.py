@@ -43,9 +43,7 @@ def dlthis_formatter(progress_dict):
 YTDL_OPTS = {
     'ignoreerrors': True,
     # Workaround for SSL certificate verification failing on Windows?!
-    'nocheckcertificate': True,
-    'quiet': True,
-    'progress_hooks': [dlthis_formatter],
+    'nocheckcertificate': True
 }
 
 if __name__ == '__main__':
@@ -75,9 +73,14 @@ if __name__ == '__main__':
         files = [link for link in files if link and not link.startswith('#')]
 
         print("Downloading: %s" % files, file=sys.stderr)
-        with youtube_dl.YoutubeDL(YTDL_OPTS) as ydl:
-            if concurrent is not None and args.jobs > 1:
-                import threading
+        if concurrent is not None and args.jobs > 1:
+            import threading
+
+            # Use a custom formatter in threaded mode so output lines don't clash with each other
+            YTDL_OPTS['progress_hooks'] = [dlthis_formatter]
+            YTDL_OPTS['quiet'] = True
+
+            with youtube_dl.YoutubeDL(YTDL_OPTS) as ydl:
                 def download_wrapper(link):
                     print('Downloading file %s in thread %s' % (link, threading.current_thread().name), file=sys.stderr)
                     return ydl.download([link])
@@ -86,6 +89,6 @@ if __name__ == '__main__':
                     for future in pool.map(download_wrapper, files):
                         # We need to iterate over the map() object for it to actually run.
                         pass
-            else:
-                print('Disabling multithreading mode (needs Python 3 and job count > 1')
+        else:
+            with youtube_dl.YoutubeDL(YTDL_OPTS) as ydl:
                 ydl.download(files)
