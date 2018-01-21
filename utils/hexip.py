@@ -5,10 +5,10 @@ import ipaddress
 import sys
 
 def hexip(ip):
-	ipobj = ipaddress.ip_address(ip)
-	ipbytes = ipobj.packed
-	# Return the hex-formatted version of each byte, zfilled to 2 chars.
-	return ''.join(format(b, 'x').zfill(2) for b in ipbytes)
+    ipobj = ipaddress.ip_address(ip)
+    ipbytes = ipobj.packed
+    # Return the hex-formatted version of each byte, zfilled to 2 chars.
+    return ''.join(format(b, 'x').zfill(2) for b in ipbytes)
 
 if __name__ == '__main__':
     try:

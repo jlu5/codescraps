@@ -5,13 +5,13 @@ import sys
 import ipaddress
 
 def unhexip(hexstring):
-	ipbytes = b''
-	# Get bytes from the hex string 4 at a time for IPv6.
-	while hexstring:
-		ipbytes += bytearray.fromhex(hexstring[:4])
-		hexstring = hexstring[4:]
-	ipobj = ipaddress.ip_address(ipbytes)
-	return ipobj.compressed
+    ipbytes = b''
+    # Get bytes from the hex string 4 at a time for IPv6.
+    while hexstring:
+        ipbytes += bytearray.fromhex(hexstring[:4])
+        hexstring = hexstring[4:]
+    ipobj = ipaddress.ip_address(ipbytes)
+    return ipobj.compressed
 
 if __name__ == '__main__':
     try:
