@@ -47,7 +47,7 @@ if __name__ == "__main__":
     _pack(ip_entry, fill=BOTH)
 
     # Output display
-    out_display = Label(frame, textvariable=out, anchor=CENTER, justify=CENTER)
+    out_display = Entry(frame, textvariable=out, width=50, justify=CENTER, state="readonly")
     _pack(out_display, fill=BOTH)
 
     root.bind('<Escape>', sysexit)
