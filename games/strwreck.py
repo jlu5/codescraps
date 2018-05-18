@@ -41,8 +41,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.interactive:
-        print(strwreck(' '.join(args.source)), end='')
+        print(strwreck(' '.join(args.source), times=args.times), end='')
     else:
         with open(args.source[0], encoding='utf-8', errors='replace') as f:
             for line in f.readlines():
-                print(strwreck(line), end='')
+                print(strwreck(line, times=args.times), end='')
