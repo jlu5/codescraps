@@ -10,11 +10,13 @@ import argparse
 import youtube_dl
 import sys
 import os
+import threading
 try:
     import concurrent
     import concurrent.futures
 except ImportError:
     concurrent = None
+
 import humanize
 
 if sys.version_info[0] < 3:
@@ -22,6 +24,7 @@ if sys.version_info[0] < 3:
     from io import open
 
 def dlthis_formatter(progress_dict):
+    """Simple line-based Youtube-DL progress formatter in multiprocess mode."""
     speed = progress_dict.get('speed')
     if speed:  # Convert into a human readable string if available
         speed = humanize.naturalsize(speed) + '/s'
@@ -74,9 +77,7 @@ if __name__ == '__main__':
 
         print("Downloading: %s" % files, file=sys.stderr)
         if concurrent is not None and args.jobs > 1:
-            import threading
-
-            # Use a custom formatter in threaded mode so output lines don't clash with each other
+            # For multiprocess mode, disable the default console output & use our custom formatter
             YTDL_OPTS['progress_hooks'] = [dlthis_formatter]
             YTDL_OPTS['quiet'] = True
 
@@ -90,5 +91,7 @@ if __name__ == '__main__':
                         # We need to iterate over the map() object for it to actually run.
                         pass
         else:
+            print('Disabling multithreading mode (needs Python 3 and job count > 1)')
+
             with youtube_dl.YoutubeDL(YTDL_OPTS) as ydl:
                 ydl.download(files)
