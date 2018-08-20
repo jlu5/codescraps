@@ -182,6 +182,10 @@ if __name__ == '__main__': # Program ran from command line
     # This app can be run with arguments like "ttt.py 5 3" for a 5x5 game
     # where 3 in a row is needed to win.
     import argparse
+    try:
+        import colorama
+    except ImportError:
+        colorama = None
 
     # Help is given via "ttt.py --help" or "ttt.py -h".
     parser = argparse.ArgumentParser(description='Command line Tic-Tac-Toe '
