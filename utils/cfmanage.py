@@ -111,7 +111,7 @@ def cf_pool(source_subdomain, target_subdomain):
     This can be used to maintain IRC round robins, for example.
     """
     # API request body
-    body = {'name': '%s.%s' % (args.source_subdomain, base_domain)}
+    body = {'name': '%s.%s' % (source_subdomain, base_domain)}
 
     processed = 0
     # Iterate over all DNS records in the source subdomain
@@ -120,7 +120,7 @@ def cf_pool(source_subdomain, target_subdomain):
               (record['content'], record['ttl'], source_subdomain, target_subdomain))
 
         # Switch the record name and add them into the new subdomain
-        record['name'] = args.target_subdomain
+        record['name'] = target_subdomain
         CF.zones.dns_records.post(zone, data=record)
         processed += 1
     else:
