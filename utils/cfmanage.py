@@ -116,8 +116,9 @@ def cf_pool(source_subdomain, target_subdomain):
     processed = 0
     # Iterate over all DNS records in the source subdomain
     for record in CF.zones.dns_records.get(zone, params=body)['result']:
-        print('Copying record for %s (ttl %s) from %s to %s' %
-              (record['content'], record['ttl'], source_subdomain, target_subdomain))
+        print('Copying record %s (%s, ttl %s) from %s.%s to %s.%s' %
+              (record['id'], record['content'], record['ttl'],
+               source_subdomain, base_domain, target_subdomain, base_domain))
 
         # Switch the record name and add them into the new subdomain
         record['name'] = target_subdomain
@@ -142,8 +143,8 @@ def cf_depool(source_subdomain, target_subdomain):
     processed = 0
     for record in CF.zones.dns_records.get(zone, params=target_body)['result']:
         if record['content'] in removal_targets:
-            print('Removing record %s (%s) from target %s' %
-                  (record['id'], record['content'], target_subdomain))
+            print('Removing record %s (%s, ttl %s) from %s.%s' %
+                  (record['id'], record['content'], record['ttl'], target_subdomain, base_domain))
             response = CF.zones.dns_records.delete(zone, record['id'])
             processed += 1
     else:
