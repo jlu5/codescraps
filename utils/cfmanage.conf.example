@@ -1,0 +1,4 @@
+[cloudflare]
+api_login = your@email
+api_key = your-api-key
+target_zone = your-dns-zone-key
