@@ -23,8 +23,13 @@ email = cf_conf['cloudflare']['api_login']
 api_key = cf_conf['cloudflare']['api_key']
 zone = cf_conf['cloudflare']['target_zone']
 
-CF = CloudFlare.CloudFlare(email=email, token=api_key, raw=True)
-base_domain = CF.zones.get(zone)['result']['name']
+CF = None
+base_domain = None
+
+def setup():
+    global CF, base_domain
+    CF = CloudFlare.CloudFlare(email=email, token=api_key, raw=True)
+    base_domain = CF.zones.get(zone)['result']['name']
 
 def get_record_type(address):
     """
@@ -154,6 +159,7 @@ if __name__ == "__main__":
     print("DEBUG: Got", parser.parse_args())
 
     # Pass the command to the target functions as keyword args
+    setup()
     cmd_vars = vars(parser.parse_args())
     func = globals()["cf_" + cmd_vars.pop('command')]
     func(**cmd_vars)
