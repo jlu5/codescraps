@@ -67,14 +67,32 @@ def cf_add(name, content, ttl=1):
     print("Record Added. %(name)s as %(content)s" % result)
     print("Record ID: %(id)s" % result)
 
-def cf_show():
+RESULTS_PER_PAGE = 50
+def cf_show(name=None, type=None, content=None, page=1, match_any=False):
     """
-    Lists CloudFlare DNS records.
+    Lists CloudFlare DNS records. Records can be filtered by name, type, and content.
     """
-    response = CF.zones.dns_records.get(zone)
 
-    count = response.get("result_info", {}).get("count", 0)
-    print("Found %d records in zone %s / %s" % (count, zone, base_domain))
+    params = {
+        'per_page': RESULTS_PER_PAGE,
+        'page': page,
+        'match': "any" if match_any else "all"
+    }
+    if name:
+        params['name'] = "%s.%s" % (name, base_domain)
+    if type:
+        params['type'] = type
+    if content:
+        params['content'] = content
+
+    print('DEBUG: using params %s for cf_show' % params)
+    response = CF.zones.dns_records.get(zone, params=params)
+
+    result_info = response['result_info']
+    count = result_info['count']
+    total_count = result_info['total_count']
+    print("Showing %d out of %d records in zone %s / %s (page %d)" %
+          (count, total_count, zone, base_domain, page))
     for res in response['result']:
         print("\t%(name)s\t%(content)s" % res)
         print("\t\tID: %(id)s" % res)
@@ -144,6 +162,12 @@ if __name__ == "__main__":
     parser_add.add_argument('-l', '--ttl', type=int, default=1)
 
     parser_show = subparsers.add_parser('show', help="shows all records")
+    parser_show.add_argument('name', nargs="?", help="only show records matching this (subdomain) name")
+    parser_show.add_argument('--type', type=str, help="only show records of this type (A, AAAA, CNAME, etc.)")
+    parser_show.add_argument('--content', type=str, help="only show records with this content")
+    parser_show.add_argument('--page', type=int, help="page number to show", default=1)
+    parser_show.add_argument('--match-any', action="store_true",
+                            help="matches any of the selected filters (vs. the default of all of them)")
 
     parser_del = subparsers.add_parser('del', help="deletes a record from a subdomain")
     parser_del.add_argument('record_id', help="record ID to delete")
@@ -158,7 +182,7 @@ if __name__ == "__main__":
 
     print("DEBUG: Got", parser.parse_args())
 
-    # Pass the command to the target functions as keyword args
+    # Pass the command details to the target functions as keyword args
     setup()
     cmd_vars = vars(parser.parse_args())
     func = globals()["cf_" + cmd_vars.pop('command')]
