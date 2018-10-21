@@ -28,13 +28,13 @@ class redirectParser():
 
     def parse(self, url, timeout=4.0):
         """Recursively looks up HTTP and meta refresh redirects."""
-        # Trying to lookup "/" will freeze the app?!
-        assert not url.startswith(('/', '\\')), "Invalid URL %r" % url
+
+        if not url.lower().startswith(("http://", "https://")):
+            url = "http://" + url
 
         addr = urlparse(url, allow_fragments=False)
         target = ''
         site = addr.netloc.encode('idna').decode()
-        assert site, "Invalid URL %s (include the http(s):// portion!)" % url
 
         # Implicitly enable SSL on https:// links, if not already.
         ssl = self.enforce_ssl or addr.scheme == 'https'
