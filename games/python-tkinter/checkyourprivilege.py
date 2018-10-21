@@ -1,14 +1,11 @@
+#!/usr/bin/env python3
 """
 Python + Tkinter app for checking your privilege.
 """
 
 import random
-try:
-    from Tkinter import *
-    from ttk import *
-except ImportError:
-    from tkinter import *
-    from tkinter.ttk import *
+from tkinter import *
+from tkinter.ttk import *
 import time
 
 privileges = ("Extremely oppressed", "Severely oppressed", "Very oppressed",
@@ -27,7 +24,7 @@ class CheckYourPrivilege():
 
         # Stores the last generated "privilege" as a string.
         self.privilege = StringVar()
-        
+
         # Surround all the elements with a frame for padding purposes
         self.frame = Frame(height=5)
         self.frame.pack(fill=BOTH, padx=20, pady=45, expand=1)
@@ -36,7 +33,7 @@ class CheckYourPrivilege():
         self.button = Button(self.frame, text="Check My Privilege",
                              command=self.update_privilege)
         self.button.pack(fill=BOTH, expand=1, padx=10, pady=10)
-        
+
         # Label to display the output
         self.privilege_display = Label(self.frame, text="", anchor=CENTER,
                                        textvariable=self.privilege,
@@ -51,7 +48,7 @@ class CheckYourPrivilege():
         """
         priv = random.choice(privileges)
         time.sleep(0.005)  # Make button spamming APPEAR less laggy
-        
+
         # Set the storage field to what we randomly chose; the label will
         # update automatically!
         self.privilege.set(priv)

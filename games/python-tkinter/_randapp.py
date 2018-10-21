@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 import random
 import string
 
 def randapp():
     """Generates a random Windows-like application name.
     Please excuse the ridiculousness of this, it's merely a joke."""
-    # Portions of below list taken from 
+    # Portions of below list taken from
     # http://download.cnet.com/windows/most-popular/3101-20_4-0.html
     appPrefixes = ("GoogleChrome","FirefoxBrowser","Windows",
             "WindowsMediaPlayer","MicrosoftOffice","Antivirus",
@@ -44,4 +44,4 @@ def randapp():
     return s[-8:]+'.exe'
 
 if __name__ == "__main__": 
-    for _ in range(10): print randapp()
+    for _ in range(10): print(randapp())

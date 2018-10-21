@@ -10,7 +10,7 @@ def gen(length=10, amount=5, type="all"):
             _usage()
         else:
             raise ValueError("Value for length or amount too not in range (1-100)")
-    L = ",".join("#"+("".join((random.choice(type)) for _ in xrange(length))) for _ in xrange(amount))
+    L = ",".join("#"+("".join((random.choice(type)) for _ in range(length))) for _ in range(amount))
     return L
 
 def _usage():

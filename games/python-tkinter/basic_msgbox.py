@@ -1,5 +1,5 @@
-#!/usr/bin/env python2
-import Tkinter
-import tkMessageBox
-Tkinter.Tk().withdraw()
-tkMessageBox.showinfo("Tkinter MessageBox","Hello world!",type='okcancel')
+#!/usr/bin/env python3
+import tkinter
+import tkinter.messagebox
+tkinter.Tk().withdraw()
+tkinter.messagebox.showinfo("Tkinter MessageBox","Hello world!",type='okcancel')

@@ -1,11 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-try:
-    from Tkinter import *
-    from ttk import *
-except ImportError:
-    from tkinter import *
-    from tkinter.ttk import *
+from tkinter import *
+from tkinter.ttk import *
 from sys import exit as sysexit
 import random
 
