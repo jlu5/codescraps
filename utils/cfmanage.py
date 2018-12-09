@@ -139,6 +139,7 @@ def cf_del(record_id):
     response = CF.zones.dns_records.delete(zone, record_id)
     result = response['result']
     print("Record removed. ID: %(id)s" % result)
+cf_delete = cf_del  # Alias support
 
 def cf_delall(name):
     """
@@ -219,28 +220,28 @@ if __name__ == "__main__":
     parser_add = subparsers.add_parser('add', help="adds a DNS record (A/AAAA/CNAME are autodetected)")
     parser_add.add_argument('name', help="name")
     parser_add.add_argument('content', help="record content")
-    parser_add.add_argument('--type', dest='record_type', type=str, help='DNS record type (leave blank to autodetect A/AAAA/CNAME)')
-    parser_add.add_argument('-l', '--ttl', type=int, help="record TTL (1=automatic)", default=1)
-    parser_add.add_argument('--proxied', action="store_true", help="whether this record should pass through Cloudflare's CDN",
+    parser_add.add_argument('--type',    '-t', dest='record_type', type=str, help='DNS record type (leave blank to autodetect A/AAAA/CNAME)')
+    parser_add.add_argument('--ttl',     '-l', type=int, help="record TTL (1=automatic)", default=1)
+    parser_add.add_argument('--proxied', '-p', action="store_true", help="whether this record should pass through Cloudflare's CDN",
                             default=False)
 
     parser_edit = subparsers.add_parser('edit', help="edits a DNS record by ID")
     parser_edit.add_argument('record_id', type=str, help="record ID")
-    parser_edit.add_argument('--name', type=str, dest="new_name", help="new record name")
+    parser_edit.add_argument('--name',    '-n', type=str, dest="new_name", help="new record name")
     parser_edit.add_argument('new_content', type=str, help="new record content (IP, etc.)", nargs='?')
-    parser_edit.add_argument('-l', '--ttl', type=int, help="new TTL (1=automatic)", default=1)
-    parser_edit.add_argument('--proxied', action="store_true", help="whether this record should pass through Cloudflare's CDN",
+    parser_edit.add_argument('--ttl',     '-l', type=int, help="new TTL (1=automatic)", default=1)
+    parser_edit.add_argument('--proxied', '-p', action="store_true", help="whether this record should pass through Cloudflare's CDN",
                              default=False)
 
     parser_show = subparsers.add_parser('show', help="shows all records")
     parser_show.add_argument('name', nargs="?", help="only show records matching this  name")
-    parser_show.add_argument('--type', type=str, help="only show records of this type")
-    parser_show.add_argument('--content', type=str, help="only show records with this content")
-    parser_show.add_argument('--page', type=int, help="page number to show", default=1)
-    parser_show.add_argument('--match-any', action="store_true",
+    parser_show.add_argument('--type',      '-t', type=str, help="only show records of this type")
+    parser_show.add_argument('--content',   '-c', type=str, help="only show records with this content")
+    parser_show.add_argument('--page',      '-p', type=int, help="page number to show", default=1)
+    parser_show.add_argument('--match-any', '-a', action="store_true",
                             help="matches any of the selected filters (vs. the default of all of them)")
 
-    parser_del = subparsers.add_parser('del', help="deletes a DNS record")
+    parser_del = subparsers.add_parser('del', help="deletes a DNS record", aliases=["delete"])
     parser_del.add_argument('record_id', help="record ID to delete")
 
     parser_del = subparsers.add_parser('delall', help="deletes all DNS records matching a name", aliases=["deleteall"])
