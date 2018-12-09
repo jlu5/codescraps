@@ -70,6 +70,22 @@ def cf_add(name, content, record_type=None, ttl=1, proxied=False):
     print("Record Added. %(name)s as %(content)s" % result)
     print("Record ID: %(id)s" % result)
 
+def _show_records(response, page):
+    """Displays all the DNS records given in "response", and returns the amount of records shown."""
+    result_info = response['result_info']
+    count = result_info['count']
+    total_count = result_info['total_count']
+    if not count:
+        print('No results for zone %s / %s' % (zone, base_domain))
+    else:
+        print("Showing %d out of %d records in zone %s / %s (page %d)" %
+                  (count, total_count, zone, base_domain, page))
+
+        for res in response['result']:
+            print("\t%(name)s\t%(type)s\t%(content)s" % res)
+            print("\t\tID: %(id)s" % res)
+    return count
+
 RESULTS_PER_PAGE = 50
 def cf_show(name=None, type=None, content=None, page=1, match_any=False):
     """
@@ -91,14 +107,7 @@ def cf_show(name=None, type=None, content=None, page=1, match_any=False):
     print('DEBUG: using params %s for cf_show' % params)
     response = CF.zones.dns_records.get(zone, params=params)
 
-    result_info = response['result_info']
-    count = result_info['count']
-    total_count = result_info['total_count']
-    print("Showing %d out of %d records in zone %s / %s (page %d)" %
-          (count, total_count, zone, base_domain, page))
-    for res in response['result']:
-        print("\t%(name)s\t%(type)s\t%(content)s" % res)
-        print("\t\tID: %(id)s" % res)
+    _show_records(response, page)
 
 def cf_edit(record_id, new_name=None, new_content=None, ttl=None, proxied=None):
     """
