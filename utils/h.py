@@ -92,7 +92,7 @@ class RedirectParser():
                 target = urljoin(url, target)
 
         logging.debug("%s %s %s: %s (SSL=%s)" % (url, data.status, data.reason, target, ssl))
-        self.visited.append((data, url, target))
+        yield (data, url, target)
 
         if target:
             if self.nredirs < self.max_redirs:
@@ -101,20 +101,18 @@ class RedirectParser():
                 sleep(0.1)
 
                 # Recursively lookup redirects for the target URL.
-                return self.parse(target, timeout)
+                yield from self.parse(target, timeout)
             else:
                raise OverflowError("Maximum amount of redirects (%s) reached." % self.max_redirs)
 
-        return self.visited
-
-    def print_results(self, visited):
-        for datapair in visited:
-            data, url, target = datapair
-            reason = data.reason or "Unknown Status Code"
-            if target:
-                print("%s %s: %s => %s" % (data.status, reason, url, target))
-            else:
-                print("%s %s: %s" % (data.status, reason, url))
+    @staticmethod
+    def display(data):
+        data, url, target = data
+        reason = data.reason or "Unknown Status Code"
+        if target:
+            print("%s %s: %s => %s" % (data.status, reason, url, target))
+        else:
+            print("%s %s: %s" % (data.status, reason, url))
 
 if __name__ == "__main__":
     ### Handle arguments nicely using argparse
@@ -142,7 +140,7 @@ if __name__ == "__main__":
         logging.getLogger().setLevel(logging.DEBUG)
 
     try:
-        links = parser.parse(args.url, args.timeout)
-        parser.print_results(links)
+        for target in parser.parse(args.url, args.timeout):
+            parser.display(target)
     except KeyboardInterrupt:
         print('Exiting on Ctrl-C.')
