@@ -38,6 +38,8 @@ def get_record_type(address):
         - "AAAA" if the address is an IPv6 address
         - "CNAME" if the address is neither of the above
     """
+    if ' ' in address:
+        raise ValueError("Unknown record type; use --type TYPE to override")
     try:
         ip = ipaddress.ip_address(address)
     except ValueError:
@@ -50,13 +52,13 @@ def get_record_type(address):
         else:
             raise ValueError("Got unknown value %r from ipaddress.ip_address()" % address)
 
-def cf_add(name, content, ttl=1, proxied=False):
+def cf_add(name, content, record_type=None, ttl=1, proxied=False):
     """Adds a DNS record with <content> to a subdomain <name>. TTL defaults to 1
     (automatic) if not given.
     """
 
     body = {
-        'type':    get_record_type(content),
+        'type':    record_type or get_record_type(content),
         'name':    name,
         'content': content,
         'ttl':     ttl,
@@ -185,9 +187,10 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
 
-    parser_add = subparsers.add_parser('add', help="adds a DNS record (only A/AAAA/CNAME are supported!)")
+    parser_add = subparsers.add_parser('add', help="adds a DNS record (A/AAAA/CNAME are autodetected)")
     parser_add.add_argument('name', help="name")
     parser_add.add_argument('content', help="record content")
+    parser_add.add_argument('--type', dest='record_type', type=str, help='DNS record type (leave blank to autodetect A/AAAA/CNAME)')
     parser_add.add_argument('-l', '--ttl', type=int, help="record TTL (1=automatic)", default=1)
     parser_add.add_argument('--proxied', action="store_true", help="whether this record should pass through Cloudflare's CDN",
                             default=False)
