@@ -123,7 +123,7 @@ def cf_edit(record_id, new_name=None, new_content=None, ttl=None, proxied=None):
 
 def cf_del(record_id):
     """
-    Removes a record by its ID (Use the "cf-show" function to display a list of records).
+    Removes a record by its ID (Use cf_show() to display a list of records).
     """
     response = CF.zones.dns_records.delete(zone, record_id)
     result = response['result']
@@ -158,14 +158,18 @@ def cf_depool(source_subdomain, target_subdomain):
     """
     # CloudFlare only allows removing entries by ID, so look up the exact record contents we need to remove here.
     get_source_records_params = {'name': '%s.%s' % (source_subdomain, base_domain)}
-    removal_targets = {record['content'] for record in
-                       CF.zones.dns_records.get(zone, params=get_source_records_params)['result']}
+    removal_targets = [record['content'] for record in
+                       CF.zones.dns_records.get(zone, params=get_source_records_params)['result']]
 
     target_body = {'name': '%s.%s' % (target_subdomain, base_domain)}
-
     # Iterate over all DNS records in the target subdomain
+    target_records = CF.zones.dns_records.get(zone, params=target_body)['result']
+
+    if len(removal_targets) > len(target_records):
+        raise ValueError("Refusing to remove more records than there are in the target! Did you reverse the argument order?")
+
     processed = 0
-    for record in CF.zones.dns_records.get(zone, params=target_body)['result']:
+    for record in target_records:
         if record['content'] in removal_targets:
             print('Removing record %s (%s, ttl %s) from %s.%s' %
                   (record['id'], record['content'], record['ttl'], target_subdomain, base_domain))
