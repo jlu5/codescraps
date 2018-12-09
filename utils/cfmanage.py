@@ -50,16 +50,17 @@ def get_record_type(address):
         else:
             raise ValueError("Got unknown value %r from ipaddress.ip_address()" % address)
 
-def cf_add(name, content, ttl=1):
+def cf_add(name, content, ttl=1, proxied=False):
     """Adds a DNS record with <content> to a subdomain <name>. TTL defaults to 1
     (automatic) if not given.
     """
 
     body = {
-        "type":    get_record_type(content),
-        "name":    name,
-        "content": content,
-        "ttl":     ttl
+        'type':    get_record_type(content),
+        'name':    name,
+        'content': content,
+        'ttl':     ttl,
+        'proxied': proxied
     }
 
     response = CF.zones.dns_records.post(zone, data=body)
@@ -75,8 +76,8 @@ def cf_show(name=None, type=None, content=None, page=1, match_any=False):
 
     params = {
         'per_page': RESULTS_PER_PAGE,
-        'page': page,
-        'match': "any" if match_any else "all"
+        'page':     page,
+        'match':    "any" if match_any else "all"
     }
     if name:
         params['name'] = "%s.%s" % (name, base_domain)
@@ -97,11 +98,34 @@ def cf_show(name=None, type=None, content=None, page=1, match_any=False):
         print("\t%(name)s\t%(content)s" % res)
         print("\t\tID: %(id)s" % res)
 
+def cf_edit(record_id, new_name=None, new_content=None, ttl=None, proxied=None):
+    """
+    Edits CloudFlare DNS records by record ID.
+    """
+    response = CF.zones.dns_records.get(zone, record_id)
+    result = response['result']
+
+    new_name = new_name or result['name']
+    new_content = new_content or result['content']
+
+    body = {
+        'name':    new_name,
+        'content': new_content,
+        'type':    result['type']
+    }
+    if ttl is not None:
+        body['ttl'] = ttl
+    if proxied is not None:
+        body['proxied'] = proxied
+    response = CF.zones.dns_records.put(zone, record_id, data=body)
+    result = response["result"]
+    print("Record Edited. %(name)s as %(content)s" % result)
+
 def cf_del(record_id):
     """
     Removes a record by its ID (Use the "cf-show" function to display a list of records).
     """
-    response = CF.zones.dns_records.delete(zone,record_id)
+    response = CF.zones.dns_records.delete(zone, record_id)
     result = response['result']
     print("Record removed. ID: %(id)s" % result)
 
@@ -157,20 +181,30 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
 
-    parser_add = subparsers.add_parser('add', help="adds a record to a subdomain")
-    parser_add.add_argument('name', help="subdomain name")
-    parser_add.add_argument('content', help="record content (A/AAAA/CNAME types are autodetected)")
-    parser_add.add_argument('-l', '--ttl', type=int, default=1)
+    parser_add = subparsers.add_parser('add', help="adds a DNS record (only A/AAAA/CNAME are supported!)")
+    parser_add.add_argument('name', help="name")
+    parser_add.add_argument('content', help="record content")
+    parser_add.add_argument('-l', '--ttl', type=int, help="record TTL (1=automatic)", default=1)
+    parser_add.add_argument('--proxied', action="store_true", help="whether this record should pass through Cloudflare's CDN",
+                            default=False)
+
+    parser_edit = subparsers.add_parser('edit', help="edits a DNS record by ID")
+    parser_edit.add_argument('record_id', type=str, help="record ID")
+    parser_edit.add_argument('--name', type=str, dest="new_name", help="new record name")
+    parser_edit.add_argument('new_content', type=str, help="new record content (IP, etc.)", nargs='?')
+    parser_edit.add_argument('-l', '--ttl', type=int, help="new TTL (1=automatic)", default=1)
+    parser_edit.add_argument('--proxied', action="store_true", help="whether this record should pass through Cloudflare's CDN",
+                             default=False)
 
     parser_show = subparsers.add_parser('show', help="shows all records")
-    parser_show.add_argument('name', nargs="?", help="only show records matching this (subdomain) name")
-    parser_show.add_argument('--type', type=str, help="only show records of this type (A, AAAA, CNAME, etc.)")
+    parser_show.add_argument('name', nargs="?", help="only show records matching this  name")
+    parser_show.add_argument('--type', type=str, help="only show records of this type")
     parser_show.add_argument('--content', type=str, help="only show records with this content")
     parser_show.add_argument('--page', type=int, help="page number to show", default=1)
     parser_show.add_argument('--match-any', action="store_true",
                             help="matches any of the selected filters (vs. the default of all of them)")
 
-    parser_del = subparsers.add_parser('del', help="deletes a record from a subdomain")
+    parser_del = subparsers.add_parser('del', help="deletes a DNS record")
     parser_del.add_argument('record_id', help="record ID to delete")
 
     parser_pool = subparsers.add_parser('pool', help="pools a subdomain into a round robin")
