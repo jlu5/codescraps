@@ -95,7 +95,7 @@ def cf_show(name=None, type=None, content=None, page=1, match_any=False):
     print("Showing %d out of %d records in zone %s / %s (page %d)" %
           (count, total_count, zone, base_domain, page))
     for res in response['result']:
-        print("\t%(name)s\t%(content)s" % res)
+        print("\t%(name)s\t%(type)s\t%(content)s" % res)
         print("\t\tID: %(id)s" % res)
 
 def cf_edit(record_id, new_name=None, new_content=None, ttl=None, proxied=None):
