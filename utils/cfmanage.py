@@ -140,6 +140,26 @@ def cf_del(record_id):
     result = response['result']
     print("Record removed. ID: %(id)s" % result)
 
+def cf_delall(name):
+    """
+    Removes all entries with the target entry name.
+    """
+    get_records_params = {'name': '%s.%s' % (name, base_domain)}
+    removal_targets = CF.zones.dns_records.get(zone, params=get_records_params)
+
+    print('Will remove the following records:')
+    count = _show_records(removal_targets, page=1)
+    if count:
+        print('If the results span multiple pages, you may have to run this command multiple times.')
+        print()
+
+        for record in removal_targets['result']:
+            cf_del(record['id'])
+    else:
+        print('No entries to remove.')
+
+cf_deletall = cf_delall
+
 def cf_pool(source_subdomain, target_subdomain):
     """
     Copies + merges all records from source subdomain into the target subdomain.
@@ -222,6 +242,9 @@ if __name__ == "__main__":
 
     parser_del = subparsers.add_parser('del', help="deletes a DNS record")
     parser_del.add_argument('record_id', help="record ID to delete")
+
+    parser_del = subparsers.add_parser('delall', help="deletes all DNS records matching a name", aliases=["deleteall"])
+    parser_del.add_argument('name', help="entry name to clear")
 
     parser_pool = subparsers.add_parser('pool', help="pools a subdomain into a round robin")
     parser_pool.add_argument('source_subdomain', help="source subdomain")
