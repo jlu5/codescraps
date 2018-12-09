@@ -110,9 +110,12 @@ class RedirectParser():
         data, url, target = data
         reason = data.reason or "Unknown Status Code"
         if target:
-            print("%s %s: %s => %s" % (data.status, reason, url, target))
+            s = "%s %s: %s => %s" % (data.status, reason, url, target)
+            if data.status == 200:
+                s += " (via meta refresh)"
         else:
-            print("%s %s: %s" % (data.status, reason, url))
+            s = "%s %s: %s" % (data.status, reason, url)
+        print(s)
 
 if __name__ == "__main__":
     ### Handle arguments nicely using argparse
