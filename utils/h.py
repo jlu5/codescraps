@@ -16,7 +16,7 @@ except ImportError:
     logging.warning("bs4 is not installed. Meta refresh parsing will be disabled.")
     BeautifulSoup = None
 
-class redirectParser():
+class RedirectParser():
     def __init__(self, enforce_ssl=False, disable_meta_refresh=False, max_redirs=10, no_check_certificates=False):
         self.nredirs = 0
         self.visited = []  # Store list of URLs passed through
@@ -55,14 +55,11 @@ class redirectParser():
         if addr.query:
             fullpath += '?%s' % addr.query
 
-        # Send a GET request to the desired address.
         httpconn.putrequest("GET", fullpath)
 
-        # This header is needed for some reason; otherwise you get a HTTP 400 on some servers.
+        # Workaround HTTP 400 on some servers.
         httpconn.putheader("Accept", "*/*")
         httpconn.endheaders()
-
-        # Fetch the response from the GET request.
         data = httpconn.getresponse()
         logging.debug('HTTP headers for %s: %s', url, pprint.pformat(data.getheaders()))
 
@@ -139,7 +136,7 @@ if __name__ == "__main__":
     parser.add_argument("-nc", "--no-check-certificates", help="skips certificate checking for SSL links", action='store_true')
     args = parser.parse_args()
 
-    parser = redirectParser(args.ssl, args.disable_meta_refresh, args.max_redirects, args.no_check_certificates)
+    parser = RedirectParser(args.ssl, args.disable_meta_refresh, args.max_redirects, args.no_check_certificates)
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
