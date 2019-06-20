@@ -8,15 +8,23 @@ import sys
 import os.path
 import subprocess
 import tempfile
+import time
 
 target = sys.argv[1]
 file_uri_path = pathlib.Path(os.path.abspath(target)).as_uri()
 
 with tempfile.NamedTemporaryFile(prefix='chrome-swf-', suffix='.html', delete=False) as tmpf:
-    tmpf.write(b"""<html>
+    tmpf.write(b"""<!DOCTYPE html>
+<html style="height: 100%%">
+<head>
 <title>%s</title>
-<object width="100%%" height="100%%" data="%s"></object>
+</head>
+
+<body style="height: 100%%">
+<object width="100%%" height="95%%" type="application/x-shockwave-flash" data="%s"></object>
+</body>
 </html>
 """ % (target.encode(), file_uri_path.encode()))
     # FIXME: I should be using xdg-open but that causes HTML files to fly into my text editor :|
+    time.sleep(0.1)
     subprocess.call(['sensible-browser', tmpf.name])
