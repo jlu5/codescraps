@@ -1,6 +1,8 @@
 /scraps/pages/res
 /wip
 
+*.conf
+
 __pycache__/
 *.py[cod]
 *.gem

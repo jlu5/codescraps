@@ -1,9 +1,6 @@
 [submodule "games/trulyamazed"]
 	path = games/trulyamazed
-	url = https://github.com/glolol/trulyamazed
+	url = https://github.com/jlu5/trulyamazed
 [submodule "utils/FileInsight"]
 	path = utils/FileInsight
-	url = https://github.com/GLolol/FileInsight
-[submodule "utils/utopia-scripts"]
-	path = utils/utopia-scripts
-	url = https://github.com/utopia-repository/utopia-scripts
+	url = https://github.com/jlu5/FileInsight
