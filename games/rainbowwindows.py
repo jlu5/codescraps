@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Makes Windows' window borders loop in rainbow colors. Supports Windows 7 and Windows 10.
 
@@ -14,6 +15,11 @@ CHANGE_ACCENT_COLOR = True
 import colorsys
 import sys
 import time
+
+if sys.platform != 'win32':
+    print('Sorry, this only works on Windows.', file=sys.stderr)
+    sys.exit(1)
+
 from ctypes import *
 from ctypes.wintypes import *
 
@@ -85,7 +91,7 @@ if __name__ == '__main__':
     has_composition = c_bool()
     windll.dwmapi.DwmIsCompositionEnabled(byref(has_composition))
     if not has_composition.value:
-        print('Composition is not enabled, aborting!')
+        print('Composition is not enabled, aborting!', file=sys.stderr)
         sys.exit(1)
 
     win_version = sys.getwindowsversion()[0]
